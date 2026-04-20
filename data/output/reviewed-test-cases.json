@@ -1,0 +1,58 @@
+[
+  {
+    "id": "TC-001",
+    "title": "Login with valid credentials",
+    "type": "UI",
+    "priority": "High",
+    "description": "Verify that a valid user can log in successfully.",
+    "preconditions": [
+      "User account exists and is active"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Open the login page and enter valid username and password",
+        "expectedResult": "Credentials are accepted by the form"
+      },
+      {
+        "stepNumber": 2,
+        "action": "Click the login button",
+        "expectedResult": "User is redirected to the dashboard"
+      }
+    ],
+    "expectedOutcome": "User is authenticated and lands on the dashboard.",
+    "tags": [
+      "login",
+      "smoke"
+    ],
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-002",
+    "title": "Login with invalid credentials shows error",
+    "type": "UI",
+    "priority": "Medium",
+    "description": "Verify invalid credentials show a clear error message.",
+    "preconditions": [
+      "Login page is accessible"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Enter invalid username/password and submit",
+        "expectedResult": "Login request is processed"
+      },
+      {
+        "stepNumber": 2,
+        "action": "Observe authentication response",
+        "expectedResult": "Error message is displayed to the user"
+      }
+    ],
+    "expectedOutcome": "User remains on login page with a visible error.",
+    "tags": [
+      "login",
+      "negative"
+    ],
+    "reviewStatus": "approved"
+  }
+]

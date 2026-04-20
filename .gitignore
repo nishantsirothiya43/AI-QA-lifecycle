@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-smoke/
+dist-test/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# Local env
+.env
