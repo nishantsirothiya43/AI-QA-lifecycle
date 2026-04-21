@@ -1,0 +1,194 @@
+# AI QA Lifecycle
+
+AI-powered QA lifecycle prototype that can run from:
+
+- a **CLI pipeline** (Node.js + TypeScript), and
+- a **frontend app** (React + Vite) backed by a lightweight local API bridge.
+
+The system generates test cases from acceptance criteria, supports review, generates Playwright scripts, runs tests, and analyzes failures.
+
+## What is implemented
+
+- Test case generation (UI + API scenarios) from acceptance criteria
+- Human-in-the-loop review flow (approve/reject/edit status)
+- Playwright test script generation for approved test cases
+- Playwright execution reporting
+- AI-based failure categorization
+- Frontend for end-to-end interactive flow
+- Runtime provider switching (Gemini / Ollama / Claude) from frontend
+- Optional Docker-based Playwright execution
+
+## Tech stack
+
+- Backend/CLI: Node.js, TypeScript, `zod`, `node-fetch`, `dotenv`
+- Frontend: React, Vite, React Router
+- Testing: Playwright
+- API bridge: Express + CORS
+- Optional isolation: Docker (Playwright container image)
+
+## Project structure
+
+- `src/` - backend modules and API server
+  - `src/index.ts` - CLI orchestrator
+  - `src/server.ts` - frontend API bridge
+  - `src/modules/` - pipeline modules
+- `frontend/` - React app
+- `data/input/` - acceptance criteria and run inputs
+- `data/output/` - generated artifacts and reports
+- `tests/generated/` - AI-generated Playwright specs
+
+## End-to-end flow
+
+1. Save acceptance criteria and target URL
+2. Generate test cases
+3. Review/approve test cases
+4. Generate Playwright scripts
+5. Run tests
+6. Analyze failures
+
+## Prerequisites
+
+- Node.js 18+
+- npm
+- For local Playwright mode: internet + browser install
+- For Docker mode (recommended for stability): Docker Desktop running
+
+## Setup
+
+1. Install root dependencies:
+
+```bash
+npm install
+```
+
+2. Install frontend dependencies:
+
+```bash
+cd frontend && npm install
+```
+
+3. Create `.env` from example:
+
+```bash
+cp .env.example .env
+```
+
+4. Update `.env` values:
+
+- `AI_PROVIDER` (`gemini` | `ollama` | `claude`)
+- provider credentials/models
+- Playwright execution mode:
+  - `PLAYWRIGHT_EXECUTION_MODE=local` or `docker`
+  - `DOCKER_PLAYWRIGHT_IMAGE` (if docker mode)
+
+## Running the system
+
+### Option A: Frontend (recommended)
+
+From root:
+
+```bash
+npm run api
+```
+
+From `frontend/`:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:5173`.
+
+### Option B: CLI pipeline
+
+```bash
+npm run dev
+```
+
+## Useful scripts
+
+### Root
+
+- `npm run api` - start backend API bridge
+- `npm run api:stop` - stop process listening on port `8787`
+- `npm run api:restart` - stop then start API
+- `npm run dev` - run CLI flow
+- `npm run build` - compile backend
+- `npm run pw:install` - install Playwright Chromium locally
+- `npm run test:playwright` - run generated Playwright tests (local mode)
+- `npm run pw:docker:build` - build local Playwright image
+- `npm run pw:docker:test` - run Playwright tests in Docker
+
+### Frontend
+
+- `npm run dev` - start UI (port `5173`)
+- `npm run build` - build UI
+- `npm run preview` - preview UI build
+
+## Frontend modules
+
+- `Dashboard` - acceptance criteria, target URL, provider settings, pipeline trigger
+- `Test Cases` - generated test case list + generation action
+- `Review` - approve/reject/edit test cases
+- `Scripts` - generated script list + generation action
+- `Execution` - run generated Playwright tests + execution report
+- `Failures` - failure categorization and insights
+
+## API endpoints (local)
+
+- `GET /api/health`
+- `GET /api/snapshot`
+- `POST /api/context`
+- `POST /api/generate-test-cases`
+- `POST /api/review/apply`
+- `POST /api/generate-scripts`
+- `POST /api/run-tests`
+- `POST /api/analyze-failures`
+- `POST /api/run-full-pipeline`
+- `GET /api/provider-config`
+- `POST /api/provider-config`
+
+## Artifacts
+
+- `data/output/test-cases.json`
+- `data/output/reviewed-test-cases.json`
+- `tests/generated/*.spec.ts`
+- `data/output/playwright-report.json`
+- `data/output/execution-report.json`
+- `data/output/failure-analysis.json`
+
+## Docker Playwright mode
+
+If local browser execution is unstable, set:
+
+```env
+PLAYWRIGHT_EXECUTION_MODE=docker
+DOCKER_PLAYWRIGHT_IMAGE=mcr.microsoft.com/playwright:v1.59.1-noble
+```
+
+Then run tests from frontend or API; backend will execute Playwright inside container.
+
+## Troubleshooting
+
+- **Provider settings save returns 404**
+  - You are likely hitting an old API process.
+  - Run `npm run api:restart`.
+
+- **Gemini DNS/host errors (`ENOTFOUND`, `getaddrinfo`)**
+  - Check network/VPN/proxy.
+  - Switch provider to `ollama` or use dockerized test execution for stability.
+
+- **Playwright says browser executable missing**
+  - Run `npm run pw:install` (local mode).
+
+- **Playwright crashes locally**
+  - Use Docker mode (`PLAYWRIGHT_EXECUTION_MODE=docker`).
+
+- **Frontend and backend out of sync**
+  - Restart API with `npm run api:restart`.
+
+## Notes
+
+- This is a prototype focused on QA lifecycle workflow and robustness.
+- Local storage is used in frontend where appropriate; backend artifacts remain file-based.
+- Keep secrets only in `.env` (never commit real keys).

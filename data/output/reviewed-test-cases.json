@@ -1,0 +1,23 @@
+[
+  {
+    "id": "TC-001",
+    "title": "Successful login with valid credentials (UI)",
+    "type": "UI",
+    "priority": "High",
+    "description": "Verifies that a user can successfully log in with valid credentials and is redirected to the post-login experience.",
+    "preconditions": [
+      "User is on the login page."
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Review feature flow",
+        "expectedResult": "System behavior matches acceptance criteria"
+      }
+    ],
+    "expectedOutcome": "Feature behaves as expected.",
+    "tags": [],
+    "source": "generated",
+    "reviewStatus": "approved"
+  }
+]

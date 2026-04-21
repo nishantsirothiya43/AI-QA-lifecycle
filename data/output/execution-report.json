@@ -1,0 +1,15 @@
+{
+  "runAt": "2026-04-21T12:12:07.858Z",
+  "totalTests": 1,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "testId": "TC-001.spec.ts:7",
+      "testTitle": "Successful interaction by adding a todo item",
+      "status": "passed",
+      "duration": 398
+    }
+  ]
+}
