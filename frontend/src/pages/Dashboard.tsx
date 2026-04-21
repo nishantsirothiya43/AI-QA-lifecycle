@@ -60,11 +60,18 @@ export default function Dashboard({ status }: DashboardProps) {
       const snapshot =
         action === 'generate' ? await api.generateTestCases() : await api.runFullPipeline();
       setLocalStatus(snapshot.status);
-      setMessage(
-        action === 'generate'
-          ? `Generated ${snapshot.status.totalGenerated} test cases.`
-          : `Pipeline run complete. Scripts: ${snapshot.status.totalScripts}.`
-      );
+      if (action === 'pipeline' && snapshot.pipelineWarnings?.length) {
+        setMessage(
+          `${snapshot.pipelineWarnings.join(' ')}\n` +
+            'Approve all scripts on the Scripts page, then run tests from Execution.'
+        );
+      } else {
+        setMessage(
+          action === 'generate'
+            ? `Generated ${snapshot.status.totalGenerated} test cases.`
+            : `Pipeline run complete. Scripts: ${snapshot.status.totalScripts}.`
+        );
+      }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : String(error);
       setMessage(`Run failed: ${errMsg}`);

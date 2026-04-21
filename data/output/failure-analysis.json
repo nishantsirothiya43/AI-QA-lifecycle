@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "testId": "TC-008.spec.ts:4",
+    "testTitle": "Verify API returns forbidden for a locked account",
+    "category": "assertion_mismatch",
+    "confidence": "high",
+    "reasoning": "The assertion 'expect(received).toBe(expected)' failed because the received value (405) is not equal to the expected value (403).",
+    "suggestedAction": "Review the test case TC-008.spec.ts:21, investigate why the API returns a '405' instead of '403' for a locked account."
+  },
+  {
+    "testId": "TC-007.spec.ts:4",
+    "testTitle": "UI verification",
+    "category": "environment_issue",
+    "confidence": "high",
+    "reasoning": "The test timed out after 30 seconds, indicating that the operation or page action being performed took longer than expected.",
+    "suggestedAction": "Review the test code and page actions to identify potential performance bottlenecks and consider implementing a wait strategy or reducing the test's timeout."
+  },
+  {
+    "testId": "TC-006.spec.ts:4",
+    "testTitle": "UI: Verify login blocked for a locked account",
+    "category": "environment_issue",
+    "confidence": "high",
+    "reasoning": "The test has timed out, which indicates that the expected condition (login blocked for a locked account) may not have been met within the specified timeout.",
+    "suggestedAction": "Review the test logic to ensure it's handling all possible scenarios, or consider increasing the timeout limit."
+  },
+  {
+    "testId": "TC-005.spec.ts:4",
+    "testTitle": "UI test",
+    "category": "script_locator_issue",
+    "confidence": "high",
+    "reasoning": "The locator 'getByPlaceholder('Username')' could not find the element within the given timeout of 5000ms.",
+    "suggestedAction": "Check if the UI element with placeholder 'Username' is correctly present and accessible on the page. Also, ensure that the test execution order and the page state match the expectations."
+  },
+  {
+    "testId": "TC-004.spec.ts:4",
+    "testTitle": "should prevent login and show validation when password is empty",
+    "category": "environment_issue",
+    "confidence": "high",
+    "reasoning": "The test timed out, indicating that the page did not respond as expected within the specified time limit.",
+    "suggestedAction": "Review the test logic and consider adding wait conditions or increasing the timeout duration to allow for slower response times."
+  },
+  {
+    "testId": "TC-003.spec.ts:4",
+    "testTitle": "Login with empty username and password",
+    "category": "unknown",
+    "confidence": "low",
+    "reasoning": "Failed to parse AI analysis: Bad escaped character in JSON at position 101 (line 4 column 48)",
+    "suggestedAction": "Manually inspect Playwright output and retry analysis."
+  },
+  {
+    "testId": "TC-002.spec.ts:4",
+    "testTitle": "Login with invalid credentials",
+    "category": "environment_issue",
+    "confidence": "high",
+    "reasoning": "The test timed out within the specified time limit.",
+    "suggestedAction": "Investigate the reason for the slow execution of the test and consider increasing the timeout or optimizing the code to run faster."
+  },
+  {
+    "testId": "TC-001.spec.ts:4",
+    "testTitle": "should log in successfully and redirect to the post-login experience",
+    "category": "environment_issue",
+    "confidence": "high",
+    "reasoning": "The test has timed out after 30 seconds, suggesting that the application is not responding as expected.",
+    "suggestedAction": "Investigate the cause of the delay, such as slow network, inefficient code, or server-side issues. Consider adding a waitForSelector or waitForFunction to make the test more robust."
+  }
+]

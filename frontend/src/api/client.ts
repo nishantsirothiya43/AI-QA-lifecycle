@@ -79,6 +79,29 @@ export const api = {
   runFullPipeline: async (): Promise<UiSnapshot> =>
     request<UiSnapshot>('/api/run-full-pipeline', { method: 'POST' }),
 
+  importTestCases: async (payload: unknown, mode: 'merge' | 'replace' = 'merge'): Promise<UiSnapshot> => {
+    const body =
+      Array.isArray(payload)
+        ? { mode, testCases: payload }
+        : { ...(payload as Record<string, unknown>), mode };
+    return request<UiSnapshot>('/api/test-cases/import', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  },
+
+  importExecutionReport: async (body: unknown): Promise<UiSnapshot> =>
+    request<UiSnapshot>('/api/execution-report/import', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  setScriptApproval: async (testId: string, approved: boolean): Promise<UiSnapshot> =>
+    request<UiSnapshot>('/api/scripts/approval', {
+      method: 'POST',
+      body: JSON.stringify({ testId, approved }),
+    }),
+
   getFailures: async () => {
     const snapshot = await request<UiSnapshot>('/api/snapshot');
     return snapshot.failures;

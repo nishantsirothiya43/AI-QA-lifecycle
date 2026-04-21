@@ -1,15 +1,41 @@
 {
-  "runAt": "2026-04-21T12:12:07.858Z",
-  "totalTests": 1,
-  "passed": 1,
-  "failed": 0,
+  "runAt": "2026-04-21T17:50:32.965Z",
+  "totalTests": 5,
+  "passed": 4,
+  "failed": 1,
   "skipped": 0,
   "results": [
     {
-      "testId": "TC-001.spec.ts:7",
-      "testTitle": "Successful interaction by adding a todo item",
+      "testId": "TC-002.spec.ts:4",
+      "testTitle": "should login successfully",
+      "status": "failed",
+      "duration": 30384,
+      "error": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+      "stackTrace": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+    },
+    {
+      "testId": "TC-001.spec.ts:9",
+      "testTitle": "✅ Valid login should succeed",
       "status": "passed",
-      "duration": 398
+      "duration": 1135
+    },
+    {
+      "testId": "TC-001.spec.ts:18",
+      "testTitle": "❌ Invalid password should show error",
+      "status": "passed",
+      "duration": 427
+    },
+    {
+      "testId": "TC-001.spec.ts:28",
+      "testTitle": "🚫 Locked user should not login",
+      "status": "passed",
+      "duration": 403
+    },
+    {
+      "testId": "TC-001.spec.ts:38",
+      "testTitle": "⚠️ Empty fields validation",
+      "status": "passed",
+      "duration": 442
     }
   ]
 }

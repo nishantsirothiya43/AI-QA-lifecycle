@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { ExecutionReport, ExecutionResult } from '../types';
 import { refreshConfigFromEnv } from '../config';
 import { fileExists, readJSON, writeJSON } from '../utils/fileHelpers';
+import { assertAllGeneratedScriptsApproved } from '../utils/scriptManifest';
 
 const execAsync = promisify(exec);
 const REPORT_OUTPUT_PATH = 'data/output/execution-report.json';
@@ -201,6 +202,7 @@ async function buildReportFromPlaywrightJson(runAt: string): Promise<ExecutionRe
 
 export async function runTests(): Promise<ExecutionReport> {
   refreshConfigFromEnv();
+  await assertAllGeneratedScriptsApproved();
   const runAt = new Date().toISOString();
   const command = buildPlaywrightCommand();
 

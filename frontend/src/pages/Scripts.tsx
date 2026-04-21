@@ -27,13 +27,30 @@ export default function Scripts() {
       .generateScripts()
       .then((snapshot) => {
         setScripts(snapshot.scripts);
-        setMessage(`Generated ${snapshot.scripts.length} scripts from approved tests.`);
+        setMessage(
+          `Generated ${snapshot.scripts.length} scripts. Approve each script before running Playwright tests.`
+        );
       })
       .catch((error: unknown) => {
         const text = error instanceof Error ? error.message : String(error);
         setMessage(`Script generation failed: ${text}`);
       })
       .finally(() => setLoading(false));
+  }
+
+  async function onApproval(testId: string, approved: boolean) {
+    setMessage('');
+    setLoading(true);
+    try {
+      const snapshot = await api.setScriptApproval(testId, approved);
+      setScripts(snapshot.scripts);
+      setMessage(`${testId} marked ${approved ? 'approved' : 'not approved'}.`);
+    } catch (error: unknown) {
+      const text = error instanceof Error ? error.message : String(error);
+      setMessage(`Approval update failed: ${text}`);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) {
@@ -54,9 +71,14 @@ export default function Scripts() {
         </div>
       </div>
       {message && <div style={{ color: 'var(--text-muted)', marginBottom: 10 }}>{message}</div>}
+      {scripts.length > 0 && (
+        <div style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 10 }}>
+          Execution is blocked until every script below is approved (after manifest is created by Generate Scripts).
+        </div>
+      )}
       {scripts.length === 0 && (
         <div style={{ color: 'var(--text-muted)' }}>
-          No scripts available in local UI storage. Import snapshot or generate via CLI first.
+          No scripts yet. Approve test cases, then generate scripts.
         </div>
       )}
       <div style={{ display: 'grid', gap: 10 }}>
@@ -65,7 +87,27 @@ export default function Scripts() {
             key={s.testId}
             style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: 'var(--bg-surface)' }}
           >
-            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-blue)' }}>{s.testId}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-blue)' }}>{s.testId}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                Script status:{' '}
+                {s.approved === true ? (
+                  <span style={{ color: 'var(--accent-amber)' }}>approved</span>
+                ) : s.approved === false ? (
+                  <span>pending approval</span>
+                ) : (
+                  <span>no gate (no manifest)</span>
+                )}
+              </div>
+            </div>
+            <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+              <button type="button" onClick={() => void onApproval(s.testId, true)} disabled={loading}>
+                Approve script
+              </button>
+              <button type="button" onClick={() => void onApproval(s.testId, false)} disabled={loading}>
+                Revoke approval
+              </button>
+            </div>
             <pre
               style={{
                 marginTop: 8,

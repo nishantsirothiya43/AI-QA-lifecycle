@@ -112,4 +112,5 @@ export interface UiSnapshot {
   scripts: ScriptFile[];
   failures: FailureCategory[];
   executionReport: ExecutionReport | null;
+  pipelineWarnings?: string[];
 }

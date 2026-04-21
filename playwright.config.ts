@@ -10,7 +10,7 @@ export default defineConfig({
   use: {
     // Public demo app maintained by Playwright (good for prototypes without a local server).
     // IMPORTANT: keep baseURL at the site root; navigate to `/todomvc/` in tests.
-    baseURL: 'https://demo.playwright.dev',
+    baseURL: 'https://www.saucedemo.com/',
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',

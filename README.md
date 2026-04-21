@@ -17,6 +17,9 @@ The system generates test cases from acceptance criteria, supports review, gener
 - Frontend for end-to-end interactive flow
 - Runtime provider switching (Gemini / Ollama / Claude) from frontend
 - Optional Docker-based Playwright execution
+- **Manual test case import** (JSON identical to `data/output/test-cases.json`) via API + Test Cases UI, plus a **plain-text form** on the same page that builds the same objects and imports via merge (no change to server validation)
+- **Script approval gate**: after scripts are generated via the API, Playwright runs are blocked until every generated script is approved in the UI (see `data/output/scripts-manifest.json`). CLI-only runs are unchanged when no manifest exists.
+- **External execution report ingestion** (paste/upload JSON matching `data/output/execution-report.json`)
 
 ## Tech stack
 
@@ -43,8 +46,9 @@ The system generates test cases from acceptance criteria, supports review, gener
 2. Generate test cases
 3. Review/approve test cases
 4. Generate Playwright scripts
-5. Run tests
-6. Analyze failures
+5. **Approve each generated script** (Scripts page) when using the API-generated manifest
+6. Run tests
+7. Analyze failures (optionally after importing an external execution report)
 
 ## Prerequisites
 
@@ -128,10 +132,10 @@ npm run dev
 ## Frontend modules
 
 - `Dashboard` - acceptance criteria, target URL, provider settings, pipeline trigger
-- `Test Cases` - generated test case list + generation action
+- `Test Cases` - generate list; **manual import** (JSON array or merge/replace template); **plain-text “Add from text”** for non-JSON users (same payload shape as generated JSON)
 - `Review` - approve/reject/edit test cases
-- `Scripts` - generated script list + generation action
-- `Execution` - run generated Playwright tests + execution report
+- `Scripts` - generated script list, generation, and **per-script approval** (required when a scripts manifest exists)
+- `Execution` - run Playwright tests, view report, **import external execution report** (paste or file)
 - `Failures` - failure categorization and insights
 
 ## API endpoints (local)
@@ -147,11 +151,15 @@ npm run dev
 - `POST /api/run-full-pipeline`
 - `GET /api/provider-config`
 - `POST /api/provider-config`
+- `POST /api/test-cases/import` — body: raw JSON **array** of test cases, or `{ "mode": "merge" | "replace", "testCases": [...] }`
+- `POST /api/execution-report/import` — body: full `ExecutionReport` object, or `{ "executionReport": { ... } }`
+- `POST /api/scripts/approval` — body: `{ "testId": "TC-001", "approved": true }`
 
 ## Artifacts
 
 - `data/output/test-cases.json`
 - `data/output/reviewed-test-cases.json`
+- `data/output/scripts-manifest.json` (script approval state; created when using **Generate Scripts** from the API)
 - `tests/generated/*.spec.ts`
 - `data/output/playwright-report.json`
 - `data/output/execution-report.json`
@@ -183,6 +191,9 @@ Then run tests from frontend or API; backend will execute Playwright inside cont
 
 - **Playwright crashes locally**
   - Use Docker mode (`PLAYWRIGHT_EXECUTION_MODE=docker`).
+
+- **Docker Desktop / Spotlight opens Docker but no window**
+  - Engine may still be running; use the menu bar whale → Dashboard, or `open -a Docker` from Terminal. If the window is off-screen, check other Spaces or restart Docker Desktop.
 
 - **Frontend and backend out of sync**
   - Restart API with `npm run api:restart`.

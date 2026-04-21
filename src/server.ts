@@ -5,12 +5,20 @@ import path from 'path';
 
 import { CONFIG, refreshConfigFromEnv } from './config';
 import { analyzeFailures } from './modules/failureAnalysis';
+import { parseExecutionReportFromRequestBody } from './modules/executionReportImport';
 import { generateScripts } from './modules/scriptGenerator';
 import { generateTestCases } from './modules/testCaseGenerator';
+import { mergeTestCasesById, parseTestCasesJsonPayload } from './modules/testCaseImport';
 import { runTests } from './modules/testExecution';
 import { ExecutionReport, FailureCategory, ScriptFile, TestCase } from './types';
 import { fileExists, readJSON, readTextFile, writeJSON, writeTextFile } from './utils/fileHelpers';
 import { getProviderInfo } from './utils/ai';
+import {
+  listGeneratedSpecTestIds,
+  readScriptManifestEntries,
+  setScriptApproval,
+  writeScriptManifestForSpecs,
+} from './utils/scriptManifest';
 
 type FrontendInputState = {
   targetUrl: string;
@@ -32,6 +40,7 @@ type PipelineSnapshot = {
   scripts: ScriptFile[];
   failures: FailureCategory[];
   executionReport: ExecutionReport | null;
+  pipelineWarnings?: string[];
 };
 
 type ProviderConfigPayload = {
@@ -64,7 +73,7 @@ const PATHS = {
 } as const;
 
 app.use(cors());
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '12mb' }));
 
 function envValue(input: string): string {
   return input.replace(/\\/g, '\\\\').replace(/\n/g, '\\n');
@@ -130,6 +139,9 @@ async function loadGeneratedScripts(): Promise<ScriptFile[]> {
     return [];
   }
 
+  const manifestEntries = await readScriptManifestEntries();
+  const approval = new Map(manifestEntries.map((entry) => [entry.testId, entry.approved]));
+
   const entries = await fs.readdir(PATHS.generatedTestsDir);
   const files = entries.filter((entry) => entry.endsWith('.spec.ts'));
 
@@ -137,10 +149,14 @@ async function loadGeneratedScripts(): Promise<ScriptFile[]> {
     files.map(async (fileName) => {
       const filePath = path.join(PATHS.generatedTestsDir, fileName);
       const scriptContent = await readTextFile(filePath);
+      const testId = fileName.replace('.spec.ts', '');
+      const hasManifest = manifestEntries.length > 0;
+      const approved = hasManifest ? approval.get(testId) === true : undefined;
       return {
-        testId: fileName.replace('.spec.ts', ''),
+        testId,
         filePath,
         scriptContent,
+        approved,
       } as ScriptFile;
     })
   );
@@ -280,6 +296,53 @@ app.post('/api/generate-test-cases', async (_req, res) => {
   }
 });
 
+app.post('/api/test-cases/import', async (req, res) => {
+  const mode =
+    req.body &&
+    typeof req.body === 'object' &&
+    !Array.isArray(req.body) &&
+    (req.body as { mode?: string }).mode === 'replace'
+      ? 'replace'
+      : 'merge';
+  try {
+    const incoming = parseTestCasesJsonPayload(req.body);
+    const existing = await readJsonIfExists<TestCase[]>(PATHS.testCases, []);
+    const next = mode === 'replace' ? incoming : mergeTestCasesById(existing, incoming);
+    await Promise.all([writeJSON(PATHS.testCases, next), writeJSON(PATHS.reviewedCases, next)]);
+    res.json(await buildSnapshot());
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(400).json({ error: message });
+  }
+});
+
+app.post('/api/execution-report/import', async (req, res) => {
+  try {
+    const report = parseExecutionReportFromRequestBody(req.body);
+    await writeJSON(PATHS.executionReport, report);
+    res.json(await buildSnapshot());
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(400).json({ error: message });
+  }
+});
+
+app.post('/api/scripts/approval', async (req, res) => {
+  const body = req.body as { testId?: string; approved?: boolean };
+  if (!body.testId || typeof body.approved !== 'boolean') {
+    res.status(400).json({ error: 'testId (string) and approved (boolean) are required.' });
+    return;
+  }
+
+  try {
+    await setScriptApproval(body.testId, body.approved);
+    res.json(await buildSnapshot());
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: message });
+  }
+});
+
 app.post('/api/review/apply', async (req, res) => {
   const body = req.body as { testCases?: TestCase[] };
   if (!Array.isArray(body.testCases)) {
@@ -306,6 +369,8 @@ app.post('/api/generate-scripts', async (_req, res) => {
       await writeJSON(PATHS.reviewedCases, testCases);
     }
     await generateScripts(PATHS.reviewedCases);
+    const specIds = await listGeneratedSpecTestIds();
+    await writeScriptManifestForSpecs(specIds);
     res.json(await buildSnapshot());
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -339,9 +404,23 @@ app.post('/api/run-full-pipeline', async (_req, res) => {
     const testCases = await generateTestCases(criteria);
     await writeJSON(PATHS.reviewedCases, testCases);
     await generateScripts(PATHS.reviewedCases);
-    await runTests();
-    await analyzeFailures(PATHS.executionReport);
-    res.json(await buildSnapshot());
+    const specIds = await listGeneratedSpecTestIds();
+    await writeScriptManifestForSpecs(specIds);
+
+    try {
+      await runTests();
+      await analyzeFailures(PATHS.executionReport);
+      const snapshot = await buildSnapshot();
+      res.json({ ...snapshot, pipelineWarnings: [] });
+    } catch (inner: unknown) {
+      const msg = inner instanceof Error ? inner.message : String(inner);
+      if (msg.includes('Script approval is required')) {
+        const snapshot = await buildSnapshot();
+        res.json({ ...snapshot, pipelineWarnings: [msg] });
+        return;
+      }
+      throw inner;
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     res.status(500).json({ error: message });
