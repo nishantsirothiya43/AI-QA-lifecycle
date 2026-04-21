@@ -87,7 +87,7 @@ export async function generateScripts(filePath: string): Promise<ScriptFile[]> {
     const outputPath = path.join(OUTPUT_DIR, `${testCase.id}.spec.ts`);
 
     try {
-      const rawResponse = await callAI(SCRIPT_SYSTEM_PROMPT, scriptUserPrompt(testCase));
+      const rawResponse = await callAI(SCRIPT_SYSTEM_PROMPT, scriptUserPrompt(testCase), 4096);
       const scriptContent = normalizeScriptResponse(rawResponse);
 
       if (!isLikelyPlaywrightScript(scriptContent)) {

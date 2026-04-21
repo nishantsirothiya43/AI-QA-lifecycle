@@ -1,21 +1,8 @@
 {
-  "runAt": "2026-04-20T18:48:22.963Z",
-  "totalTests": 2,
-  "passed": 2,
+  "runAt": "2026-04-21T09:59:04.199Z",
+  "totalTests": 0,
+  "passed": 0,
   "failed": 0,
   "skipped": 0,
-  "results": [
-    {
-      "testId": "PASSED-1",
-      "testTitle": "Passed Test 1",
-      "status": "passed",
-      "duration": 0
-    },
-    {
-      "testId": "PASSED-2",
-      "testTitle": "Passed Test 2",
-      "status": "passed",
-      "duration": 0
-    }
-  ]
+  "results": []
 }

@@ -30,6 +30,27 @@ type AnthropicMessagesResponse = {
   error?: { message?: string };
 };
 
+const PROVIDER_TIMEOUTS_MS = {
+  gemini: 60_000,
+  ollama: 180_000,
+  claude: 60_000,
+} as const;
+
+async function fetchWithTimeout(
+  url: string,
+  init: Parameters<typeof fetch>[1],
+  timeoutMs: number
+): Promise<Awaited<ReturnType<typeof fetch>>> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export function cleanJsonResponse(text: string): string {
   let cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
   cleaned = cleaned.trim();
@@ -95,7 +116,9 @@ async function callGemini(systemPrompt: string, userPrompt: string, maxTokens: n
       modelName
     )}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(
+      url,
+      {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -103,7 +126,9 @@ async function callGemini(systemPrompt: string, userPrompt: string, maxTokens: n
         contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
         generationConfig: { maxOutputTokens: maxTokens },
       }),
-    });
+      },
+      PROVIDER_TIMEOUTS_MS.gemini
+    );
 
     const data = (await response.json()) as GeminiGenerateResponse;
 
@@ -154,7 +179,9 @@ async function callOllama(systemPrompt: string, userPrompt: string, maxTokens: n
   const { baseUrl, model } = CONFIG.ollama;
   const url = `${baseUrl.replace(/\/$/, '')}/api/chat`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(
+    url,
+    {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -166,7 +193,9 @@ async function callOllama(systemPrompt: string, userPrompt: string, maxTokens: n
         { role: 'user', content: userPrompt },
       ],
     }),
-  });
+    },
+    PROVIDER_TIMEOUTS_MS.ollama
+  );
 
   const data = (await response.json()) as OllamaChatResponse;
 
@@ -189,7 +218,9 @@ async function callClaudeAnthropic(systemPrompt: string, userPrompt: string, max
   const { apiKey, model } = CONFIG.claude;
   const url = 'https://api.anthropic.com/v1/messages';
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(
+    url,
+    {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -202,7 +233,9 @@ async function callClaudeAnthropic(systemPrompt: string, userPrompt: string, max
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     }),
-  });
+    },
+    PROVIDER_TIMEOUTS_MS.claude
+  );
 
   const data = (await response.json()) as AnthropicMessagesResponse;
 
@@ -404,15 +437,25 @@ export async function callAI(
     const err = error as { status?: number; message?: string };
     const message = err instanceof Error ? err.message : String(error);
 
+    const lowerMessage = message.toLowerCase();
     const isRateLimit =
       err?.status === 429 ||
       message.includes('429') ||
-      message.toLowerCase().includes('overloaded');
+      lowerMessage.includes('overloaded') ||
+      lowerMessage.includes('high demand') ||
+      lowerMessage.includes('temporarily unavailable');
 
     if (isRateLimit) {
-      console.warn('[AI] Rate limit hit. Retrying in 5 seconds...');
-      await new Promise((res) => setTimeout(res, 5000));
+      console.warn('[AI] Provider under load. Retrying in 10 seconds...');
+      await new Promise((res) => setTimeout(res, 10_000));
       return invoke();
+    }
+
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(
+        `AI request timed out after waiting for provider response (${CONFIG.aiProvider}). ` +
+          'Try again with a shorter input or a smaller/faster model.'
+      );
     }
 
     if (message.includes('ECONNREFUSED') && CONFIG.aiProvider === 'ollama') {

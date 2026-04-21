@@ -2,10 +2,50 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 
 import { ExecutionReport, ExecutionResult } from '../types';
-import { writeJSON } from '../utils/fileHelpers';
+import { fileExists, readJSON, writeJSON } from '../utils/fileHelpers';
 
 const execAsync = promisify(exec);
 const REPORT_OUTPUT_PATH = 'data/output/execution-report.json';
+const PLAYWRIGHT_REPORT_PATH = 'data/output/playwright-report.json';
+
+type PlaywrightError = {
+  message?: string;
+  stack?: string;
+};
+
+type PlaywrightResult = {
+  status?: string;
+  duration?: number;
+  error?: PlaywrightError;
+  errors?: Array<{ message?: string }>;
+};
+
+type PlaywrightTest = {
+  results?: PlaywrightResult[];
+};
+
+type PlaywrightSpec = {
+  title?: string;
+  file?: string;
+  line?: number;
+  tests?: PlaywrightTest[];
+};
+
+type PlaywrightSuite = {
+  title?: string;
+  file?: string;
+  suites?: PlaywrightSuite[];
+  specs?: PlaywrightSpec[];
+};
+
+type PlaywrightReport = {
+  stats?: {
+    expected?: number;
+    unexpected?: number;
+    skipped?: number;
+  };
+  suites?: PlaywrightSuite[];
+};
 
 function parseCount(output: string, label: string): number {
   // Playwright commonly prints summaries like:
@@ -67,42 +107,104 @@ function extractFirstErrorBlock(output: string): string {
   return slice.split('\n\n')[0]?.trim() ?? slice;
 }
 
+function collectSpecs(suites: PlaywrightSuite[] | undefined): PlaywrightSpec[] {
+  if (!suites) return [];
+
+  const specs: PlaywrightSpec[] = [];
+  const stack = [...suites];
+
+  while (stack.length > 0) {
+    const suite = stack.pop();
+    if (!suite) continue;
+
+    if (Array.isArray(suite.specs)) {
+      specs.push(...suite.specs);
+    }
+    if (Array.isArray(suite.suites)) {
+      stack.push(...suite.suites);
+    }
+  }
+
+  return specs;
+}
+
+function toExecutionStatus(status: string | undefined): ExecutionResult['status'] {
+  if (status === 'passed' || status === 'expected') return 'passed';
+  if (status === 'skipped') return 'skipped';
+  return 'failed';
+}
+
+async function buildReportFromPlaywrightJson(runAt: string): Promise<ExecutionReport | null> {
+  if (!(await fileExists(PLAYWRIGHT_REPORT_PATH))) {
+    return null;
+  }
+
+  const raw = await readJSON<PlaywrightReport>(PLAYWRIGHT_REPORT_PATH);
+  const specs = collectSpecs(raw.suites);
+
+  const results: ExecutionResult[] = [];
+
+  for (const spec of specs) {
+    const firstTest = spec.tests?.[0];
+    const firstResult = firstTest?.results?.[0];
+    const status = toExecutionStatus(firstResult?.status);
+    const errorMessage =
+      firstResult?.error?.message ??
+      firstResult?.errors?.find((e) => typeof e.message === 'string')?.message;
+
+    results.push({
+      testId: spec.file ? `${spec.file}:${spec.line ?? 0}` : `SPEC-${results.length + 1}`,
+      testTitle: spec.title ?? 'Untitled test',
+      status,
+      duration: firstResult?.duration ?? 0,
+      error: status === 'failed' ? errorMessage ?? 'Playwright test failed.' : undefined,
+      stackTrace: firstResult?.error?.stack,
+    });
+  }
+
+  const passed = raw.stats?.expected ?? results.filter((r) => r.status === 'passed').length;
+  const failed = raw.stats?.unexpected ?? results.filter((r) => r.status === 'failed').length;
+  const skipped = raw.stats?.skipped ?? results.filter((r) => r.status === 'skipped').length;
+
+  return {
+    runAt,
+    totalTests: passed + failed + skipped,
+    passed,
+    failed,
+    skipped,
+    results,
+  };
+}
+
 export async function runTests(): Promise<ExecutionReport> {
   const runAt = new Date().toISOString();
   const command = 'npx playwright test tests/generated';
 
   try {
-    const { stdout, stderr } = await execAsync(command, {
+    await execAsync(command, {
       maxBuffer: 10 * 1024 * 1024,
     });
 
-    const combinedOutput = `${stdout}\n${stderr}`;
-    const passed = parseCount(combinedOutput, 'passed');
-    const failed = parseCount(combinedOutput, 'failed');
-    const failedResults = parseFailedResults(combinedOutput);
-    const results: ExecutionResult[] = [
-      ...failedResults,
-      ...Array.from({ length: Math.max(0, passed) }, (_, i) => ({
-        testId: `PASSED-${i + 1}`,
-        testTitle: `Passed Test ${i + 1}`,
-        status: 'passed' as const,
-        duration: 0,
-      })),
-    ];
+    const jsonReport = await buildReportFromPlaywrightJson(runAt);
+    if (!jsonReport) {
+      throw new Error(
+        `Playwright run succeeded but JSON report not found at "${PLAYWRIGHT_REPORT_PATH}".`
+      );
+    }
 
-    const report: ExecutionReport = {
-      runAt,
-      totalTests: passed + failed,
-      passed,
-      failed,
-      skipped: 0,
-      results,
-    };
-
-    await writeJSON(REPORT_OUTPUT_PATH, report);
-    return report;
+    await writeJSON(REPORT_OUTPUT_PATH, jsonReport);
+    return jsonReport;
   } catch (error) {
     const execError = error as { stdout?: string; stderr?: string; message?: string };
+    const jsonReport = await buildReportFromPlaywrightJson(runAt);
+    if (jsonReport) {
+      await writeJSON(REPORT_OUTPUT_PATH, jsonReport);
+      if (execError.message) {
+        console.error(`Playwright execution failed: ${execError.message}`);
+      }
+      return jsonReport;
+    }
+
     const combinedOutput = `${execError.stdout ?? ''}\n${execError.stderr ?? ''}`;
     const passed = parseCount(combinedOutput, 'passed');
     const failed = parseCount(combinedOutput, 'failed');

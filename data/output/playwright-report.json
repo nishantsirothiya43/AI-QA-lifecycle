@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 2
+      "actualWorkers": 5
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,7 +20,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 2
+          "actualWorkers": 5
         },
         "id": "",
         "name": "",
@@ -66,13 +66,13 @@
       "specs": [],
       "suites": [
         {
-          "title": "Demo TodoMVC (public prototype target)",
+          "title": "Login Functionality - UI",
           "file": "TC-001.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "should add a todo item",
+              "title": "Successful Login - UI",
               "ok": true,
               "tags": [],
               "tests": [
@@ -87,12 +87,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 509,
+                      "duration": 1093,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-20T18:48:24.721Z",
+                      "startTime": "2026-04-21T10:07:15.381Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -100,7 +100,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "577687e59bef6f4b4ce3-6ab79b540355ff807cbe",
+              "id": "577687e59bef6f4b4ce3-d0eecf0658bca4f58a3b",
               "file": "TC-001.spec.ts",
               "line": 4,
               "column": 7
@@ -117,14 +117,14 @@
       "specs": [],
       "suites": [
         {
-          "title": "Demo TodoMVC (public prototype target)",
+          "title": "Authentication API Tests",
           "file": "TC-002.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "should add a todo item",
-              "ok": true,
+              "title": "Successful Login - API",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -137,13 +137,276 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 669,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts:15:31",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts",
+                          "column": 31,
+                          "line": 15
+                        },
+                        "snippet": "  13 |\n  14 |     // EXPECT: API responds with 200 OK.\n> 15 |     expect(response.status()).toBe(200);\n     |                               ^\n  16 |\n  17 |     // Parse the response body to verify content\n  18 |     const responseBody = await response.json();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts",
+                            "column": 31,
+                            "line": 15
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n\n  13 |\n  14 |     // EXPECT: API responds with 200 OK.\n> 15 |     expect(response.status()).toBe(200);\n     |                               ^\n  16 |\n  17 |     // Parse the response body to verify content\n  18 |     const responseBody = await response.json();\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts:15:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:15.378Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-002-Authentication-API-Tests-Successful-Login---API/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-002-Authentication-API-Tests-Successful-Login---API/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts",
+                        "column": 31,
+                        "line": 15
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfc1d44aad53a9e876a9-ea2bd41a3439c66ec6c1",
+              "file": "TC-002.spec.ts",
+              "line": 5,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-003.spec.ts",
+      "file": "TC-003.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Invalid Credentials UI Test",
+          "file": "TC-003.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display an error message for invalid credentials",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 2211,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.error-message')\nExpected: visible\nTimeout: 1000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('.error-message')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.error-message')\nExpected: visible\nTimeout: 1000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('.error-message')\u001b[22m\n\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-003.spec.ts:57:50",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-003.spec.ts",
+                          "column": 50,
+                          "line": 57
+                        },
+                        "snippet": "  55 |     // Placeholder for a non-existent error message assertion.\n  56 |     // If this were a real login page, this would be crucial.\n> 57 |     await expect(page.locator('.error-message')).toBeVisible({ timeout: 1000 }); // Assuming a common error message class, but it won't exist.\n     |                                                  ^\n  58 |   });\n  59 | });\n  60 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-003.spec.ts",
+                            "column": 50,
+                            "line": 57
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.error-message')\nExpected: visible\nTimeout: 1000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 1000ms\u001b[22m\n\u001b[2m  - waiting for locator('.error-message')\u001b[22m\n\n\n  55 |     // Placeholder for a non-existent error message assertion.\n  56 |     // If this were a real login page, this would be crucial.\n> 57 |     await expect(page.locator('.error-message')).toBeVisible({ timeout: 1000 }); // Assuming a common error message class, but it won't exist.\n     |                                                  ^\n  58 |   });\n  59 | });\n  60 |\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-003.spec.ts:57:50"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:15.377Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-003-Invalid-Credentials-0aef8-age-for-invalid-credentials/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-003-Invalid-Credentials-0aef8-age-for-invalid-credentials/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-003-Invalid-Credentials-0aef8-age-for-invalid-credentials/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-003.spec.ts",
+                        "column": 50,
+                        "line": 57
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "92d5083d9b78aba49eb2-503c00ec99f8645c47b8",
+              "file": "TC-003.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-004.spec.ts",
+      "file": "TC-004.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication API Tests",
+          "file": "TC-004.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Invalid Credentials - API",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 653,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts:12:31",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts",
+                          "column": 31,
+                          "line": 12
+                        },
+                        "snippet": "  10 |     });\n  11 |\n> 12 |     expect(response.status()).toBe(401);\n     |                               ^\n  13 |\n  14 |     const responseBody = await response.json();\n  15 |     expect(responseBody).toHaveProperty('errorCode');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts",
+                            "column": 31,
+                            "line": 12
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n\n  10 |     });\n  11 |\n> 12 |     expect(response.status()).toBe(401);\n     |                               ^\n  13 |\n  14 |     const responseBody = await response.json();\n  15 |     expect(responseBody).toHaveProperty('errorCode');\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts:12:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:15.388Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-004-Authentication-API-Tests-Invalid-Credentials---API/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-004-Authentication-API-Tests-Invalid-Credentials---API/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts",
+                        "column": 31,
+                        "line": 12
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e48783768359d1219d03-24ef33248f32c68ca2b2",
+              "file": "TC-004.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-005.spec.ts",
+      "file": "TC-005.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Login Form Validation",
+          "file": "TC-005.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Verify form validation for empty required fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 509,
+                      "duration": 1086,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-20T18:48:24.721Z",
+                      "startTime": "2026-04-21T10:07:15.382Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -151,8 +414,432 @@
                   "status": "expected"
                 }
               ],
-              "id": "bfc1d44aad53a9e876a9-97cbab584216883f912a",
-              "file": "TC-002.spec.ts",
+              "id": "19d53905058c42a34022-ff0da56f28f9a7c91452",
+              "file": "TC-005.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-006.spec.ts",
+      "file": "TC-006.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Authentication Tests",
+          "file": "TC-006.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should reject malformed login request missing password",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 130,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-006.spec.ts:11:31",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-006.spec.ts",
+                          "column": 31,
+                          "line": 11
+                        },
+                        "snippet": "   9 |     });\n  10 |\n> 11 |     expect(response.status()).toBe(400);\n     |                               ^\n  12 |\n  13 |     const responseBody = await response.json();\n  14 |     expect(responseBody).toHaveProperty('message');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-006.spec.ts",
+                            "column": 31,
+                            "line": 11
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n\n   9 |     });\n  10 |\n> 11 |     expect(response.status()).toBe(400);\n     |                               ^\n  12 |\n  13 |     const responseBody = await response.json();\n  14 |     expect(responseBody).toHaveProperty('message');\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-006.spec.ts:11:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:16.491Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-006-API-Authentication--1aa78-in-request-missing-password/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-006-API-Authentication--1aa78-in-request-missing-password/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-006.spec.ts",
+                        "column": 31,
+                        "line": 11
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c5494511e34622abe317-2f0634a08f2fcb22ca00",
+              "file": "TC-006.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-007.spec.ts",
+      "file": "TC-007.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Locked Account - UI",
+          "file": "TC-007.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display an error message for a locked account login",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30156,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-007.spec.ts",
+                            "column": 25,
+                            "line": 25
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Username')\u001b[22m\n\n\n  23 |     // Step 1: Enter valid username and any password\n  24 |     // EXPECT: Input fields accept the credentials.\n> 25 |     await usernameInput.fill('locked.user@example.com');\n     |                         ^\n  26 |     await expect(usernameInput).toHaveValue('locked.user@example.com');\n  27 |\n  28 |     await passwordInput.fill('anypassword');\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-007.spec.ts:25:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:16.488Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-007-Locked-Account---UI-0960b--for-a-locked-account-login/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-007-Locked-Account---UI-0960b--for-a-locked-account-login/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-007-Locked-Account---UI-0960b--for-a-locked-account-login/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ca7b40687a645774213e-99f703e253c4e86ff878",
+              "file": "TC-007.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-008.spec.ts",
+      "file": "TC-008.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Locked Account - API",
+          "file": "TC-008.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Verify API response for a locked account",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 77,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts:17:34",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts",
+                          "column": 34,
+                          "line": 17
+                        },
+                        "snippet": "  15 |\n  16 |     // Expect the API to respond with 403 Forbidden\n> 17 |     expect(apiResponse.status()).toBe(403);\n     |                                  ^\n  18 |\n  19 |     // Parse the JSON response body\n  20 |     const responseBody = await apiResponse.json();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts",
+                            "column": 34,
+                            "line": 17
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n\n  15 |\n  16 |     // Expect the API to respond with 403 Forbidden\n> 17 |     expect(apiResponse.status()).toBe(403);\n     |                                  ^\n  18 |\n  19 |     // Parse the JSON response body\n  20 |     const responseBody = await apiResponse.json();\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts:17:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:17.117Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-008-Locked-Account---AP-2a630-sponse-for-a-locked-account/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-008-Locked-Account---AP-2a630-sponse-for-a-locked-account/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts",
+                        "column": 34,
+                        "line": 17
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b953b07c8b8e6d4118b0-eecd6b5ad497d1a3b583",
+              "file": "TC-008.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-009.spec.ts",
+      "file": "TC-009.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API - Malformed request - missing username",
+          "file": "TC-009.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should return 400 when username is missing in the login request",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 98,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts:19:31",
+                        "location": {
+                          "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts",
+                          "column": 31,
+                          "line": 19
+                        },
+                        "snippet": "  17 |\n  18 |     // Expect the response status code to be 400 Bad Request\n> 19 |     expect(response.status()).toBe(400);\n     |                               ^\n  20 |\n  21 |     // Parse the response body as JSON\n  22 |     const responseBody = await response.json();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts",
+                            "column": 31,
+                            "line": 19
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n\n  17 |\n  18 |     // Expect the response status code to be 400 Bad Request\n> 19 |     expect(response.status()).toBe(400);\n     |                               ^\n  20 |\n  21 |     // Parse the response body as JSON\n  22 |     const responseBody = await response.json();\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts:19:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:16.768Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-009-API---Malformed-req-6b204-issing-in-the-login-request/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-009-API---Malformed-req-6b204-issing-in-the-login-request/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts",
+                        "column": 31,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "04b207b27998ef992328-fa257c19531f2fe45969",
+              "file": "TC-009.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "TC-010.spec.ts",
+      "file": "TC-010.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Login with locked account - UI",
+          "file": "TC-010.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display error message for locked account",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30083,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/nishant/AI-QA-lifecycle/tests/generated/TC-010.spec.ts",
+                            "column": 25,
+                            "line": 11
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Username')\u001b[22m\n\n\n   9 |     //    EXPECT: The username field accepts the input.\n  10 |     const usernameInput = page.getByPlaceholder('Username');\n> 11 |     await usernameInput.fill('locked.user@example.com');\n     |                         ^\n  12 |     await expect(usernameInput).toHaveValue('locked.user@example.com');\n  13 |\n  14 |     // 2. Enter 'AnyPass123!' into the password field.\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-010.spec.ts:11:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-21T10:07:16.772Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-010-Login-with-locked-a-0c32a--message-for-locked-account/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-010-Login-with-locked-a-0c32a--message-for-locked-account/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/nishant/AI-QA-lifecycle/test-results/TC-010-Login-with-locked-a-0c32a--message-for-locked-account/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d2348bd1f618b8b14c73-3edd734dcaf6034d6873",
+              "file": "TC-010.spec.ts",
               "line": 4,
               "column": 7
             }
@@ -163,11 +850,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-20T18:48:24.294Z",
-    "duration": 1233.656,
+    "startTime": "2026-04-21T10:07:14.592Z",
+    "duration": 32353.096000000005,
     "expected": 2,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 8,
     "flaky": 0
   }
 }

@@ -62,7 +62,7 @@ export async function analyzeFailures(filePath: string): Promise<FailureCategory
     );
 
     try {
-      const rawResponse = await callAI(FAILURE_ANALYSIS_SYSTEM_PROMPT, userPrompt);
+      const rawResponse = await callAI(FAILURE_ANALYSIS_SYSTEM_PROMPT, userPrompt, 600);
       const jsonText = cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(jsonText) as RawFailureAnalysis;
 

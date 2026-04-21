@@ -1,58 +1,260 @@
 [
   {
     "id": "TC-001",
-    "title": "Login with valid credentials",
+    "title": "Successful Login - UI",
     "type": "UI",
     "priority": "High",
-    "description": "Verify that a valid user can log in successfully.",
+    "description": "Verify successful user authentication via the UI.",
     "preconditions": [
-      "User account exists and is active"
+      "User is on the login page"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Open the login page and enter valid username and password",
-        "expectedResult": "Credentials are accepted by the form"
+        "action": "Enter valid username 'valid.user@example.com' and password 'ValidPass123!'",
+        "expectedResult": "Input fields accept the credentials."
       },
       {
         "stepNumber": 2,
         "action": "Click the login button",
-        "expectedResult": "User is redirected to the dashboard"
+        "expectedResult": "User is redirected to the post-login experience."
       }
     ],
-    "expectedOutcome": "User is authenticated and lands on the dashboard.",
+    "expectedOutcome": "User is successfully logged in and sees the dashboard.",
     "tags": [
       "login",
-      "smoke"
+      "happy-path"
     ],
+    "source": "generated",
     "reviewStatus": "approved"
   },
   {
     "id": "TC-002",
-    "title": "Login with invalid credentials shows error",
+    "title": "Successful Login - API",
+    "type": "API",
+    "priority": "High",
+    "description": "Verify successful user authentication via the API.",
+    "preconditions": [],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Send POST request to /api/auth/login with valid credentials",
+        "expectedResult": "API responds with 200 OK."
+      }
+    ],
+    "expectedOutcome": "API returns a valid authentication token and user details.",
+    "tags": [
+      "login",
+      "api",
+      "happy-path"
+    ],
+    "apiDetails": {
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "requestBody": {
+        "username": "valid.user@example.com",
+        "password": "ValidPass123!"
+      },
+      "expectedStatus": 200,
+      "expectedResponseFields": [
+        "token",
+        "expiresIn",
+        "userId"
+      ]
+    },
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-003",
+    "title": "Invalid Credentials - UI",
     "type": "UI",
     "priority": "Medium",
-    "description": "Verify invalid credentials show a clear error message.",
+    "description": "Verify error message is displayed for invalid credentials.",
     "preconditions": [
-      "Login page is accessible"
+      "User is on the login page"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Enter invalid username/password and submit",
-        "expectedResult": "Login request is processed"
+        "action": "Enter invalid password 'WrongPass!' with valid username",
+        "expectedResult": "Input fields accept the credentials."
       },
       {
         "stepNumber": 2,
-        "action": "Observe authentication response",
-        "expectedResult": "Error message is displayed to the user"
+        "action": "Click the login button",
+        "expectedResult": "An error message is displayed."
       }
     ],
-    "expectedOutcome": "User remains on login page with a visible error.",
+    "expectedOutcome": "Login is rejected and a user-visible error message is shown.",
     "tags": [
       "login",
-      "negative"
+      "error-handling"
     ],
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-004",
+    "title": "Invalid Credentials - API",
+    "type": "API",
+    "priority": "Medium",
+    "description": "Verify API rejects login with invalid credentials.",
+    "preconditions": [],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Send POST request to /api/auth/login with invalid password",
+        "expectedResult": "API responds with 401 Unauthorized."
+      }
+    ],
+    "expectedOutcome": "API returns an error indicating unauthorized access.",
+    "tags": [
+      "login",
+      "api",
+      "error-handling"
+    ],
+    "apiDetails": {
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "requestBody": {
+        "username": "valid.user@example.com",
+        "password": "WrongPass!"
+      },
+      "expectedStatus": 401,
+      "expectedResponseFields": [
+        "errorCode",
+        "message"
+      ]
+    },
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-005",
+    "title": "Mandatory Fields - UI",
+    "type": "UI",
+    "priority": "Medium",
+    "description": "Verify form validation for empty required fields.",
+    "preconditions": [
+      "User is on the login page"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Leave username and password fields empty",
+        "expectedResult": "Input fields are empty."
+      },
+      {
+        "stepNumber": 2,
+        "action": "Click the login button",
+        "expectedResult": "An error message indicating required fields is displayed or form does not submit."
+      }
+    ],
+    "expectedOutcome": "User sees guidance indicating required fields are missing.",
+    "tags": [
+      "login",
+      "validation"
+    ],
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-006",
+    "title": "Malformed Request - API",
+    "type": "API",
+    "priority": "Medium",
+    "description": "Verify API rejects malformed login request.",
+    "preconditions": [],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Send POST request to /api/auth/login with missing password field",
+        "expectedResult": "API responds with 400 Bad Request."
+      }
+    ],
+    "expectedOutcome": "API returns an error detailing the missing required field.",
+    "tags": [
+      "login",
+      "api",
+      "validation"
+    ],
+    "apiDetails": {
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "requestBody": {
+        "username": "valid.user@example.com"
+      },
+      "expectedStatus": 400,
+      "expectedResponseFields": [
+        "message"
+      ]
+    },
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-007",
+    "title": "Locked Account - UI",
+    "type": "UI",
+    "priority": "Medium",
+    "description": "Verify locked account login attempt shows appropriate message.",
+    "preconditions": [
+      "User is on the login page"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Enter valid username 'locked.user@example.com' and any password",
+        "expectedResult": "Input fields accept the credentials."
+      },
+      {
+        "stepNumber": 2,
+        "action": "Click the login button",
+        "expectedResult": "A specific error message regarding account lock is displayed."
+      }
+    ],
+    "expectedOutcome": "Login is blocked and a clear message indicates the account is locked.",
+    "tags": [
+      "login",
+      "error-handling"
+    ],
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-008",
+    "title": "Locked Account - API",
+    "type": "API",
+    "priority": "Medium",
+    "description": "Verify API response for a locked account.",
+    "preconditions": [],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Send POST request to /api/auth/login with locked account credentials",
+        "expectedResult": "API responds with 403 Forbidden."
+      }
+    ],
+    "expectedOutcome": "API returns an error indicating the account is locked or disabled.",
+    "tags": [
+      "login",
+      "api",
+      "error-handling"
+    ],
+    "apiDetails": {
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "requestBody": {
+        "username": "locked.user@example.com",
+        "password": "AnyPass123!"
+      },
+      "expectedStatus": 403,
+      "expectedResponseFields": [
+        "message"
+      ]
+    },
+    "source": "generated",
     "reviewStatus": "approved"
   }
 ]
