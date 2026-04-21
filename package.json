@@ -12,6 +12,8 @@
     "build": "tsc",
     "pw:install": "npx playwright install chromium",
     "test:playwright": "playwright test tests/generated",
+    "pw:docker:build": "docker build -f Dockerfile.playwright -t ai-qa-playwright:local .",
+    "pw:docker:test": "docker run --rm --ipc=host -v \"$PWD:/work\" -w /work mcr.microsoft.com/playwright:v1.59.1-noble /bin/bash -lc \"npm ci --include=dev && npx playwright test tests/generated\"",
     "test": "npm run test:playwright"
   },
   "repository": {

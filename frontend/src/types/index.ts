@@ -66,15 +66,6 @@ export interface FailureCategory {
   suggestedAction: string;
 }
 
-export interface ExecutionResult {
-  testId: string;
-  testTitle: string;
-  status: 'passed' | 'failed' | 'skipped';
-  duration: number;
-  error?: string;
-  stackTrace?: string;
-}
-
 export interface ExecutionReport {
   runAt: string;
   totalTests: number;
@@ -97,6 +88,21 @@ export interface FrontendInputState {
   targetUrl: string;
   acceptanceCriteria: string;
   updatedAt: string | null;
+}
+
+export interface ProviderConfig {
+  aiProvider: AIProvider;
+  mockLlm: boolean;
+  playwrightExecutionMode: 'local' | 'docker';
+  dockerPlaywrightImage: string;
+  geminiModel: string;
+  geminiApiKey?: string;
+  hasGeminiApiKey: boolean;
+  ollamaBaseUrl: string;
+  ollamaModel: string;
+  claudeModel: string;
+  claudeApiKey?: string;
+  hasClaudeApiKey: boolean;
 }
 
 export interface UiSnapshot {

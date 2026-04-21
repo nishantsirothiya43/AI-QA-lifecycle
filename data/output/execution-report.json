@@ -1,89 +1,15 @@
 {
-  "runAt": "2026-04-21T11:25:20.388Z",
-  "totalTests": 10,
-  "passed": 0,
-  "failed": 10,
+  "runAt": "2026-04-21T12:12:07.858Z",
+  "totalTests": 1,
+  "passed": 1,
+  "failed": 0,
   "skipped": 0,
   "results": [
     {
-      "testId": "TC-010.spec.ts:4",
-      "testTitle": "should display error message for locked account",
-      "status": "failed",
-      "duration": 30124,
-      "error": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-      "stackTrace": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-    },
-    {
-      "testId": "TC-009.spec.ts:4",
-      "testTitle": "Verify that the login API returns 400 when username is missing",
-      "status": "failed",
-      "duration": 102,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-009.spec.ts:13:31"
-    },
-    {
-      "testId": "TC-008.spec.ts:4",
-      "testTitle": "Verify that the login API endpoint returns 400 Bad Request when password is missing",
-      "status": "failed",
-      "duration": 102,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-008.spec.ts:14:31"
-    },
-    {
-      "testId": "TC-007.spec.ts:4",
-      "testTitle": "Verify behavior when attempting to log in with both empty username and password",
-      "status": "failed",
-      "duration": 5478,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Username')\nExpected: \u001b[32m\"\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Username')\u001b[22m\n",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Username')\nExpected: \u001b[32m\"\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Username')\u001b[22m\n\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-007.spec.ts:15:33"
-    },
-    {
-      "testId": "TC-006.spec.ts:4",
-      "testTitle": "Verify behavior when attempting to log in with an empty password",
-      "status": "failed",
-      "duration": 30141,
-      "error": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-      "stackTrace": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-    },
-    {
-      "testId": "TC-005.spec.ts:4",
-      "testTitle": "Verify behavior when attempting to log in with an empty username",
-      "status": "failed",
-      "duration": 6129,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Username')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Username')\u001b[22m\n",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByLabel('Username')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Username')\u001b[22m\n\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-005.spec.ts:14:33"
-    },
-    {
-      "testId": "TC-004.spec.ts:4",
-      "testTitle": "Invalid Credentials - API returns 401 Unauthorized",
-      "status": "failed",
-      "duration": 315,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-004.spec.ts:14:31"
-    },
-    {
-      "testId": "TC-003.spec.ts:4",
-      "testTitle": "should display an error message when entering invalid credentials",
-      "status": "failed",
-      "duration": 30098,
-      "error": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-      "stackTrace": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-    },
-    {
-      "testId": "TC-002.spec.ts:4",
-      "testTitle": "Verify login API returns 200 and required fields",
-      "status": "failed",
-      "duration": 315,
-      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m405\u001b[39m",
-      "stackTrace": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m405\u001b[39m\n    at /Users/nishant/AI-QA-lifecycle/tests/generated/TC-002.spec.ts:14:31"
-    },
-    {
-      "testId": "TC-001.spec.ts:4",
-      "testTitle": "Verify that a user can successfully log in with valid credentials",
-      "status": "failed",
-      "duration": 30095,
-      "error": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-      "stackTrace": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+      "testId": "TC-001.spec.ts:7",
+      "testTitle": "Successful interaction by adding a todo item",
+      "status": "passed",
+      "duration": 398
     }
   ]
 }

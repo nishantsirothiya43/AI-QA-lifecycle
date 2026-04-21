@@ -21,6 +21,7 @@ export default function Sidebar({ status }: SidebarProps) {
           ['/dashboard', 'Dashboard'],
           ['/test-cases', 'Test Cases'],
           ['/scripts', 'Scripts'],
+          ['/execution', 'Execution'],
           ['/review', 'Review'],
           ['/failures', 'Failures'],
         ].map(([to, label]) => (

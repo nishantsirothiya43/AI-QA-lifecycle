@@ -8,7 +8,7 @@ import { promisify } from 'util';
 // Keep dotenv behavior consistent: local `.env` should win.
 dotenv.config({ override: true });
 
-import { CONFIG } from '../config';
+import { CONFIG, refreshConfigFromEnv } from '../config';
 
 type GeminiGenerateResponse = {
   candidates?: Array<{
@@ -99,6 +99,7 @@ export function cleanJsonResponse(text: string): string {
 }
 
 export function getProviderInfo(): { provider: string; model: string } {
+  refreshConfigFromEnv();
   const provider = CONFIG.aiProvider;
   const models: Record<string, string> = {
     gemini: CONFIG.gemini.model,
@@ -477,6 +478,7 @@ export async function callAI(
   userPrompt: string,
   maxTokens: number = 4096
 ): Promise<string> {
+  refreshConfigFromEnv();
   assertProviderCredentials();
 
   const invoke = async (): Promise<string> => {

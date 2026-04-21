@@ -8,6 +8,7 @@ import TestCases from './pages/TestCases';
 import Scripts from './pages/Scripts';
 import Review from './pages/Review';
 import FailureReport from './pages/FailureReport';
+import TestExecution from './pages/TestExecution';
 
 export default function App() {
   const [status, setStatus] = useState<PipelineStatus | null>(null);
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard status={status} />} />
           <Route path="/test-cases" element={<TestCases />} />
           <Route path="/scripts" element={<Scripts />} />
+          <Route path="/execution" element={<TestExecution />} />
           <Route path="/review" element={<Review />} />
           <Route path="/failures" element={<FailureReport />} />
         </Routes>

@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/playwright:v1.59.1-noble
+
+WORKDIR /work
+
+# Optional warm image for CI/local reuse. Runtime command mounts project and runs tests.
+# Keeping this image simple avoids changing existing app logic.

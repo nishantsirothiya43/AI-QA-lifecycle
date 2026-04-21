@@ -1,6 +1,7 @@
 import type {
   FrontendInputState,
   PipelineStatus,
+  ProviderConfig,
   TestCase,
   UiSnapshot,
 } from '../types';
@@ -17,6 +18,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
+    if (response.status === 404 && path.includes('/api/provider-config')) {
+      throw new Error(
+        'Provider settings API is unavailable on the running backend. Run `npm run api:restart` in project root and retry.'
+      );
+    }
     const payload = (await response.json().catch(() => null)) as { error?: string } | null;
     throw new Error(payload?.error ?? `Request failed: ${response.status}`);
   }
@@ -87,5 +93,14 @@ export const api = {
     request<UiSnapshot>('/api/context', {
       method: 'POST',
       body: JSON.stringify(input),
+    }),
+
+  getProviderConfig: async (): Promise<ProviderConfig> =>
+    request<ProviderConfig>('/api/provider-config'),
+
+  saveProviderConfig: async (config: ProviderConfig): Promise<ProviderConfig> =>
+    request<ProviderConfig>('/api/provider-config', {
+      method: 'POST',
+      body: JSON.stringify(config),
     }),
 };

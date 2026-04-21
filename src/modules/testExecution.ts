@@ -2,11 +2,34 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 
 import { ExecutionReport, ExecutionResult } from '../types';
+import { refreshConfigFromEnv } from '../config';
 import { fileExists, readJSON, writeJSON } from '../utils/fileHelpers';
 
 const execAsync = promisify(exec);
 const REPORT_OUTPUT_PATH = 'data/output/execution-report.json';
 const PLAYWRIGHT_REPORT_PATH = 'data/output/playwright-report.json';
+
+function shellQuote(value: string): string {
+  return `'${value.replace(/'/g, `'\\''`)}'`;
+}
+
+function buildPlaywrightCommand(): string {
+  const mode = (process.env.PLAYWRIGHT_EXECUTION_MODE ?? 'local').toLowerCase();
+  if (mode !== 'docker') {
+    return 'npx playwright test tests/generated';
+  }
+
+  const image = process.env.DOCKER_PLAYWRIGHT_IMAGE ?? 'mcr.microsoft.com/playwright:v1.59.1-noble';
+  const cwd = process.cwd();
+  return [
+    'docker run --rm --ipc=host',
+    `-v ${shellQuote(`${cwd}:/work`)}`,
+    '-w /work',
+    shellQuote(image),
+    '/bin/bash -lc',
+    shellQuote('npm ci --include=dev && npx playwright test tests/generated'),
+  ].join(' ');
+}
 
 type PlaywrightError = {
   message?: string;
@@ -177,8 +200,9 @@ async function buildReportFromPlaywrightJson(runAt: string): Promise<ExecutionRe
 }
 
 export async function runTests(): Promise<ExecutionReport> {
+  refreshConfigFromEnv();
   const runAt = new Date().toISOString();
-  const command = 'npx playwright test tests/generated';
+  const command = buildPlaywrightCommand();
 
   try {
     await execAsync(command, {

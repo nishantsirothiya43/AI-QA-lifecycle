@@ -1,159 +1,22 @@
 [
   {
     "id": "TC-001",
-    "title": "UI - Successful login with valid credentials",
+    "title": "Successful login with valid credentials (UI)",
     "type": "UI",
     "priority": "High",
-    "description": "Verify that a user can successfully log in using a valid username and password.",
+    "description": "Verifies that a user can successfully log in with valid credentials and is redirected to the post-login experience.",
     "preconditions": [
-      "User is on the login page",
-      "Valid credentials exist: valid.user@example.com / ValidPass123!"
+      "User is on the login page."
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Navigate to https://demo.playwright.dev/todomvc/",
-        "expectedResult": "Page loads successfully."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Enter 'valid.user@example.com' into the username field",
-        "expectedResult": "Username is entered."
-      },
-      {
-        "stepNumber": 3,
-        "action": "Enter 'ValidPass123!' into the password field",
-        "expectedResult": "Password is masked."
-      },
-      {
-        "stepNumber": 4,
-        "action": "Click the login/submit button",
-        "expectedResult": "User is redirected to the dashboard/home page."
+        "action": "Review feature flow",
+        "expectedResult": "System behavior matches acceptance criteria"
       }
     ],
-    "expectedOutcome": "User is authenticated and session token/cookie is created.",
-    "tags": [
-      "smoke",
-      "ui",
-      "auth"
-    ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-002",
-    "title": "UI - Login failure with invalid credentials",
-    "type": "UI",
-    "priority": "High",
-    "description": "Verify that login fails and an error message is displayed when invalid credentials are provided.",
-    "preconditions": [
-      "User is on the login page"
-    ],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Enter 'valid.user@example.com' into username",
-        "expectedResult": "Input accepted."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Enter 'WrongPass!' into password",
-        "expectedResult": "Input accepted."
-      },
-      {
-        "stepNumber": 3,
-        "action": "Click Submit",
-        "expectedResult": "Login rejected."
-      }
-    ],
-    "expectedOutcome": "Visible error message indicating invalid credentials appears.",
-    "tags": [
-      "negative",
-      "ui"
-    ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-003",
-    "title": "UI - Validation for mandatory fields",
-    "type": "UI",
-    "priority": "Medium",
-    "description": "Verify that the application prevents submission with empty required fields.",
-    "preconditions": [
-      "User is on the login page"
-    ],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Leave username and password empty",
-        "expectedResult": "Fields are empty."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Click Submit",
-        "expectedResult": "Form does not submit."
-      }
-    ],
-    "expectedOutcome": "User sees validation messages for required fields.",
-    "tags": [
-      "boundary",
-      "ui"
-    ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-004",
-    "title": "UI - Login attempt with locked account",
-    "type": "UI",
-    "priority": "High",
-    "description": "Verify that locked accounts are prevented from logging in with a specific message.",
-    "preconditions": [
-      "User is on login page",
-      "Account 'locked.user@example.com' is in a locked state"
-    ],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Enter 'locked.user@example.com' and password",
-        "expectedResult": "Input accepted."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Click Submit",
-        "expectedResult": "Login blocked."
-      }
-    ],
-    "expectedOutcome": "Specific error message regarding account lock is displayed.",
-    "tags": [
-      "negative",
-      "ui"
-    ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-005",
-    "title": "UI - Password field character masking",
-    "type": "UI",
-    "priority": "Medium",
-    "description": "Verify that the password field masks characters for security.",
-    "preconditions": [
-      "User is on login page"
-    ],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Type characters into the password input",
-        "expectedResult": "Characters are not visible as plain text."
-      }
-    ],
-    "expectedOutcome": "Input type is 'password' or visually obscured.",
-    "tags": [
-      "security",
-      "ui"
-    ],
+    "expectedOutcome": "Feature behaves as expected.",
+    "tags": [],
     "source": "generated",
     "reviewStatus": "approved"
   }
