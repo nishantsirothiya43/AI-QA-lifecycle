@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "start": "ts-node src/index.ts",
+    "api": "ts-node src/server.ts",
+    "api:stop": "sh -c 'lsof -tiTCP:8787 -sTCP:LISTEN | xargs -r kill'",
+    "api:restart": "npm run api:stop && npm run api",
     "build": "tsc",
     "pw:install": "npx playwright install chromium",
     "test:playwright": "playwright test tests/generated",
@@ -24,7 +27,9 @@
   "homepage": "https://github.com/nishantsirothiya43/AI-QA-lifecycle#readme",
   "dependencies": {
     "chalk": "^4.1.2",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "inquirer": "^8.2.7",
     "node-fetch": "^2.7.0",
     "ora": "^5.4.1",
@@ -32,6 +37,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^25.6.0",
     "@types/node-fetch": "^2.6.13",

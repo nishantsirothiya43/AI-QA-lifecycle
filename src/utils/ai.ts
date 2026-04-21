@@ -1,5 +1,8 @@
 import * as dotenv from 'dotenv';
+import dns from 'dns';
 import fetch from 'node-fetch';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 
 // `ai.ts` is sometimes imported without going through `config.ts` first.
 // Keep dotenv behavior consistent: local `.env` should win.
@@ -35,6 +38,35 @@ const PROVIDER_TIMEOUTS_MS = {
   ollama: 180_000,
   claude: 60_000,
 } as const;
+const execFileAsync = promisify(execFile);
+
+function isDnsErrorMessage(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes('enotfound') ||
+    lower.includes('eai_again') ||
+    lower.includes('getaddrinfo')
+  );
+}
+
+async function callGeminiViaCurl(url: string, payload: string, timeoutMs: number): Promise<GeminiGenerateResponse> {
+  const timeoutSec = Math.max(1, Math.ceil(timeoutMs / 1000));
+  const { stdout } = await execFileAsync('curl', [
+    '--silent',
+    '--show-error',
+    '--max-time',
+    String(timeoutSec),
+    '--request',
+    'POST',
+    '--header',
+    'Content-Type: application/json',
+    '--data',
+    payload,
+    url,
+  ]);
+
+  return JSON.parse(stdout) as GeminiGenerateResponse;
+}
 
 async function fetchWithTimeout(
   url: string,
@@ -116,23 +148,36 @@ async function callGemini(systemPrompt: string, userPrompt: string, maxTokens: n
       modelName
     )}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-    const response = await fetchWithTimeout(
-      url,
-      {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-        generationConfig: { maxOutputTokens: maxTokens },
-      }),
-      },
-      PROVIDER_TIMEOUTS_MS.gemini
-    );
+    const payload = JSON.stringify({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+      generationConfig: { maxOutputTokens: maxTokens },
+    });
 
-    const data = (await response.json()) as GeminiGenerateResponse;
+    let response: Awaited<ReturnType<typeof fetch>> | null = null;
+    let data: GeminiGenerateResponse;
+    try {
+      response = await fetchWithTimeout(
+        url,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+        },
+        PROVIDER_TIMEOUTS_MS.gemini
+      );
+      data = (await response.json()) as GeminiGenerateResponse;
+    } catch (networkError: unknown) {
+      const networkMessage =
+        networkError instanceof Error ? networkError.message : String(networkError);
+      if (!isDnsErrorMessage(networkMessage)) {
+        throw networkError instanceof Error ? networkError : new Error(networkMessage);
+      }
+      console.warn(`[AI][Gemini] Node fetch DNS issue for ${modelName}. Falling back to curl transport.`);
+      data = await callGeminiViaCurl(url, payload, PROVIDER_TIMEOUTS_MS.gemini);
+    }
 
-    if (!response.ok) {
+    if (response && !response.ok) {
       const apiMessage = data.error?.message ?? `HTTP ${response.status}`;
       lastErrorMessage = apiMessage;
 
@@ -155,6 +200,26 @@ async function callGemini(systemPrompt: string, userPrompt: string, maxTokens: n
         continue;
       }
 
+      throw new Error(`Gemini API failed: ${apiMessage}`);
+    }
+
+    if (data.error?.message) {
+      // Handles curl fallback responses where we don't have HTTP status.
+      const apiMessage = data.error.message;
+      lastErrorMessage = apiMessage;
+      const lower = apiMessage.toLowerCase();
+      const maybeWrongModel =
+        lower.includes('not found') ||
+        lower.includes('not supported') ||
+        lower.includes('does not exist');
+      const maybeQuota =
+        lower.includes('quota') ||
+        lower.includes('exceeded your current quota') ||
+        lower.includes('resource exhausted');
+      if ((maybeWrongModel || maybeQuota) && modelName !== modelsToTry[modelsToTry.length - 1]) {
+        console.warn(`[AI][Gemini] Retrying with a different Gemini model...`);
+        continue;
+      }
       throw new Error(`Gemini API failed: ${apiMessage}`);
     }
 
@@ -462,6 +527,43 @@ export async function callAI(
       throw new Error(
         'Cannot connect to Ollama. Make sure Ollama is running (typically `ollama serve`) and OLLAMA_BASE_URL is correct.'
       );
+    }
+
+    const isDnsResolutionIssue = isDnsErrorMessage(message);
+
+    if (isDnsResolutionIssue && CONFIG.aiProvider === 'gemini') {
+      // Transient DNS issues are common on unstable networks/VPN transitions.
+      console.warn('[AI][Gemini] DNS resolution failed. Retrying in 3 seconds...');
+      await new Promise((res) => setTimeout(res, 3_000));
+      try {
+        return await invoke();
+      } catch (retryError: unknown) {
+        const secondMessage = retryError instanceof Error ? retryError.message : String(retryError);
+        const secondLower = secondMessage.toLowerCase();
+        const stillDnsIssue = isDnsErrorMessage(secondLower);
+
+        if (stillDnsIssue) {
+          try {
+            // Fallback resolvers when local DNS intermittently fails for Node processes.
+            dns.setServers(['8.8.8.8', '1.1.1.1']);
+            console.warn('[AI][Gemini] Switched Node DNS servers to 8.8.8.8/1.1.1.1. Retrying...');
+            return await invoke();
+          } catch (dnsRetryError: unknown) {
+            const retryMessage =
+              dnsRetryError instanceof Error ? dnsRetryError.message : String(dnsRetryError);
+            throw new Error(
+              'Unable to reach Gemini API host (DNS resolution failure).\n' +
+                '- Check internet connectivity.\n' +
+                '- Disable/reconnect VPN or corporate proxy if active.\n' +
+                '- Verify DNS works for generativelanguage.googleapis.com from your machine.\n' +
+                '- Temporary fallback: set AI_PROVIDER=ollama (with local model) or AI_PROVIDER=claude with MOCK_LLM=true.\n' +
+                `Original error: ${retryMessage}`
+            );
+          }
+        }
+
+        throw retryError instanceof Error ? retryError : new Error(secondMessage);
+      }
     }
 
     console.error(`[AI] callAI failed for provider "${CONFIG.aiProvider}": ${message}`);

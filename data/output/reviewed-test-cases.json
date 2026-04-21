@@ -1,259 +1,159 @@
 [
   {
     "id": "TC-001",
-    "title": "Successful Login - UI",
+    "title": "UI - Successful login with valid credentials",
     "type": "UI",
     "priority": "High",
-    "description": "Verify successful user authentication via the UI.",
+    "description": "Verify that a user can successfully log in using a valid username and password.",
     "preconditions": [
-      "User is on the login page"
+      "User is on the login page",
+      "Valid credentials exist: valid.user@example.com / ValidPass123!"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Enter valid username 'valid.user@example.com' and password 'ValidPass123!'",
-        "expectedResult": "Input fields accept the credentials."
+        "action": "Navigate to https://demo.playwright.dev/todomvc/",
+        "expectedResult": "Page loads successfully."
       },
       {
         "stepNumber": 2,
-        "action": "Click the login button",
-        "expectedResult": "User is redirected to the post-login experience."
+        "action": "Enter 'valid.user@example.com' into the username field",
+        "expectedResult": "Username is entered."
+      },
+      {
+        "stepNumber": 3,
+        "action": "Enter 'ValidPass123!' into the password field",
+        "expectedResult": "Password is masked."
+      },
+      {
+        "stepNumber": 4,
+        "action": "Click the login/submit button",
+        "expectedResult": "User is redirected to the dashboard/home page."
       }
     ],
-    "expectedOutcome": "User is successfully logged in and sees the dashboard.",
+    "expectedOutcome": "User is authenticated and session token/cookie is created.",
     "tags": [
-      "login",
-      "happy-path"
+      "smoke",
+      "ui",
+      "auth"
     ],
     "source": "generated",
     "reviewStatus": "approved"
   },
   {
     "id": "TC-002",
-    "title": "Successful Login - API",
-    "type": "API",
-    "priority": "High",
-    "description": "Verify successful user authentication via the API.",
-    "preconditions": [],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Send POST request to /api/auth/login with valid credentials",
-        "expectedResult": "API responds with 200 OK."
-      }
-    ],
-    "expectedOutcome": "API returns a valid authentication token and user details.",
-    "tags": [
-      "login",
-      "api",
-      "happy-path"
-    ],
-    "apiDetails": {
-      "method": "POST",
-      "endpoint": "/api/auth/login",
-      "requestBody": {
-        "username": "valid.user@example.com",
-        "password": "ValidPass123!"
-      },
-      "expectedStatus": 200,
-      "expectedResponseFields": [
-        "token",
-        "expiresIn",
-        "userId"
-      ]
-    },
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-003",
-    "title": "Invalid Credentials - UI",
+    "title": "UI - Login failure with invalid credentials",
     "type": "UI",
-    "priority": "Medium",
-    "description": "Verify error message is displayed for invalid credentials.",
+    "priority": "High",
+    "description": "Verify that login fails and an error message is displayed when invalid credentials are provided.",
     "preconditions": [
       "User is on the login page"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Enter invalid password 'WrongPass!' with valid username",
-        "expectedResult": "Input fields accept the credentials."
+        "action": "Enter 'valid.user@example.com' into username",
+        "expectedResult": "Input accepted."
       },
       {
         "stepNumber": 2,
-        "action": "Click the login button",
-        "expectedResult": "An error message is displayed."
+        "action": "Enter 'WrongPass!' into password",
+        "expectedResult": "Input accepted."
+      },
+      {
+        "stepNumber": 3,
+        "action": "Click Submit",
+        "expectedResult": "Login rejected."
       }
     ],
-    "expectedOutcome": "Login is rejected and a user-visible error message is shown.",
+    "expectedOutcome": "Visible error message indicating invalid credentials appears.",
     "tags": [
-      "login",
-      "error-handling"
+      "negative",
+      "ui"
+    ],
+    "source": "generated",
+    "reviewStatus": "approved"
+  },
+  {
+    "id": "TC-003",
+    "title": "UI - Validation for mandatory fields",
+    "type": "UI",
+    "priority": "Medium",
+    "description": "Verify that the application prevents submission with empty required fields.",
+    "preconditions": [
+      "User is on the login page"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Leave username and password empty",
+        "expectedResult": "Fields are empty."
+      },
+      {
+        "stepNumber": 2,
+        "action": "Click Submit",
+        "expectedResult": "Form does not submit."
+      }
+    ],
+    "expectedOutcome": "User sees validation messages for required fields.",
+    "tags": [
+      "boundary",
+      "ui"
     ],
     "source": "generated",
     "reviewStatus": "approved"
   },
   {
     "id": "TC-004",
-    "title": "Invalid Credentials - API",
-    "type": "API",
-    "priority": "Medium",
-    "description": "Verify API rejects login with invalid credentials.",
-    "preconditions": [],
+    "title": "UI - Login attempt with locked account",
+    "type": "UI",
+    "priority": "High",
+    "description": "Verify that locked accounts are prevented from logging in with a specific message.",
+    "preconditions": [
+      "User is on login page",
+      "Account 'locked.user@example.com' is in a locked state"
+    ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Send POST request to /api/auth/login with invalid password",
-        "expectedResult": "API responds with 401 Unauthorized."
+        "action": "Enter 'locked.user@example.com' and password",
+        "expectedResult": "Input accepted."
+      },
+      {
+        "stepNumber": 2,
+        "action": "Click Submit",
+        "expectedResult": "Login blocked."
       }
     ],
-    "expectedOutcome": "API returns an error indicating unauthorized access.",
+    "expectedOutcome": "Specific error message regarding account lock is displayed.",
     "tags": [
-      "login",
-      "api",
-      "error-handling"
+      "negative",
+      "ui"
     ],
-    "apiDetails": {
-      "method": "POST",
-      "endpoint": "/api/auth/login",
-      "requestBody": {
-        "username": "valid.user@example.com",
-        "password": "WrongPass!"
-      },
-      "expectedStatus": 401,
-      "expectedResponseFields": [
-        "errorCode",
-        "message"
-      ]
-    },
     "source": "generated",
     "reviewStatus": "approved"
   },
   {
     "id": "TC-005",
-    "title": "Mandatory Fields - UI",
+    "title": "UI - Password field character masking",
     "type": "UI",
     "priority": "Medium",
-    "description": "Verify form validation for empty required fields.",
+    "description": "Verify that the password field masks characters for security.",
     "preconditions": [
-      "User is on the login page"
+      "User is on login page"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Leave username and password fields empty",
-        "expectedResult": "Input fields are empty."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Click the login button",
-        "expectedResult": "An error message indicating required fields is displayed or form does not submit."
+        "action": "Type characters into the password input",
+        "expectedResult": "Characters are not visible as plain text."
       }
     ],
-    "expectedOutcome": "User sees guidance indicating required fields are missing.",
+    "expectedOutcome": "Input type is 'password' or visually obscured.",
     "tags": [
-      "login",
-      "validation"
+      "security",
+      "ui"
     ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-006",
-    "title": "Malformed Request - API",
-    "type": "API",
-    "priority": "Medium",
-    "description": "Verify API rejects malformed login request.",
-    "preconditions": [],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Send POST request to /api/auth/login with missing password field",
-        "expectedResult": "API responds with 400 Bad Request."
-      }
-    ],
-    "expectedOutcome": "API returns an error detailing the missing required field.",
-    "tags": [
-      "login",
-      "api",
-      "validation"
-    ],
-    "apiDetails": {
-      "method": "POST",
-      "endpoint": "/api/auth/login",
-      "requestBody": {
-        "username": "valid.user@example.com"
-      },
-      "expectedStatus": 400,
-      "expectedResponseFields": [
-        "message"
-      ]
-    },
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-007",
-    "title": "Locked Account - UI",
-    "type": "UI",
-    "priority": "Medium",
-    "description": "Verify locked account login attempt shows appropriate message.",
-    "preconditions": [
-      "User is on the login page"
-    ],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Enter valid username 'locked.user@example.com' and any password",
-        "expectedResult": "Input fields accept the credentials."
-      },
-      {
-        "stepNumber": 2,
-        "action": "Click the login button",
-        "expectedResult": "A specific error message regarding account lock is displayed."
-      }
-    ],
-    "expectedOutcome": "Login is blocked and a clear message indicates the account is locked.",
-    "tags": [
-      "login",
-      "error-handling"
-    ],
-    "source": "generated",
-    "reviewStatus": "approved"
-  },
-  {
-    "id": "TC-008",
-    "title": "Locked Account - API",
-    "type": "API",
-    "priority": "Medium",
-    "description": "Verify API response for a locked account.",
-    "preconditions": [],
-    "steps": [
-      {
-        "stepNumber": 1,
-        "action": "Send POST request to /api/auth/login with locked account credentials",
-        "expectedResult": "API responds with 403 Forbidden."
-      }
-    ],
-    "expectedOutcome": "API returns an error indicating the account is locked or disabled.",
-    "tags": [
-      "login",
-      "api",
-      "error-handling"
-    ],
-    "apiDetails": {
-      "method": "POST",
-      "endpoint": "/api/auth/login",
-      "requestBody": {
-        "username": "locked.user@example.com",
-        "password": "AnyPass123!"
-      },
-      "expectedStatus": 403,
-      "expectedResponseFields": [
-        "message"
-      ]
-    },
     "source": "generated",
     "reviewStatus": "approved"
   }
