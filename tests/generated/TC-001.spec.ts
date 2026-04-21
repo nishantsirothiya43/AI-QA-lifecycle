@@ -1,46 +1,29 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('SauceDemo Login Tests', () => {
+test.describe('Login Module', () => {
 
-  test.beforeEach(async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-  });
+  test('Login with Valid Credentials', async ({ page }) => {
+    // Navigate to the login page
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
-  test('✅ Valid login should succeed', async ({ page }) => {
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+    // Expect the login page to be visible
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
 
-    await expect(page).toHaveURL(/inventory/);
-    await expect(page.locator('.inventory_list')).toBeVisible();
-  });
+    // Fill in the username field
+    await page.getByPlaceholder('Username').fill('Admin');
 
-  test('❌ Invalid password should show error', async ({ page }) => {
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'wrong_password');
-    await page.click('#login-button');
+    // Fill in the password field
+    await page.getByPlaceholder('Password').fill('admin123');
 
-    const error = page.locator('[data-test="error"]');
-    await expect(error).toBeVisible();
-    await expect(error).toContainText('Username and password do not match');
-  });
+    // Click the login button
+    await page.getByRole('button', { name: 'Login' }).click();
 
-  test('🚫 Locked user should not login', async ({ page }) => {
-    await page.fill('#user-name', 'locked_out_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+    // Verify successful redirection to the Dashboard page
+    // Look for a unique element on the dashboard page, e.g., the "Dashboard" heading
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
-    const error = page.locator('[data-test="error"]');
-    await expect(error).toBeVisible();
-    await expect(error).toContainText('locked out');
-  });
-
-  test('⚠️ Empty fields validation', async ({ page }) => {
-    await page.click('#login-button');
-
-    const error = page.locator('[data-test="error"]');
-    await expect(error).toBeVisible();
-    await expect(error).toContainText('Username is required');
+    // Optionally, verify the URL changed to the dashboard route
+    await expect(page).toHaveURL(/.*dashboard\/index/);
   });
 
 });

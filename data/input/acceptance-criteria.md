@@ -1,37 +1,78 @@
-🔑 Test Credentials
-Username: standard_user
-Password: secret_sauce
-🚫 Other useful users
-locked_out_user → account locked
-problem_user → UI bugs
-performance_glitch_user → slow app
+# 🧪 Feature: OrangeHRM Demo Login Page Testing
 
-# Feature: User Login (SauceDemo)
+## 📌 Application Under Test
 
-## Acceptance Criteria
+* **URL:** https://opensource-demo.orangehrmlive.com/
+* **Module:** Authentication (Login)
 
-1. Valid Login
-- User can log in using valid credentials
-- Redirected to inventory page after successful login
+---
 
-2. Invalid Credentials
-- Incorrect username or password shows error message
-- Error message should be visible and descriptive
+## 🎯 Objective
 
-3. Mandatory Fields
-- Username and password are required
-- Empty submission should not proceed
+Validate core login functionality with minimal high-value test coverage.
 
-4. Locked Account
-- Locked users cannot log in
-- Proper error message should be displayed
+---
 
-5. UI Behavior
-- Login button should be clickable
-- Password field should mask input
+## 🧾 Test Data
 
-6. Performance
-- Login should complete within 3 seconds
+| Scenario      | Username | Password |
+| ------------- | -------- | -------- |
+| Valid Login   | Admin    | admin123 |
+| Invalid Login | Admin    | wrong123 |
+| Empty Fields  | —        | —        |
 
-7. Security
-- Password field should not display plain text
+---
+
+## ✅ Test Cases
+
+### 1. Login with Valid Credentials
+
+**Steps:**
+
+1. Open login page
+2. Enter username: `Admin`
+3. Enter password: `admin123`
+4. Click Login
+
+**Expected Result:**
+
+* User is redirected to dashboard
+* Dashboard is visible
+
+---
+
+### 2. Login with Invalid Credentials
+
+**Steps:**
+
+1. Enter username: `Admin`
+2. Enter password: `wrong123`
+3. Click Login
+
+**Expected Result:**
+
+* Error message displayed: *Invalid credentials*
+* User remains on login page
+
+---
+
+### 3. Login with Empty Fields
+
+**Steps:**
+
+1. Leave username blank
+2. Leave password blank
+3. Click Login
+
+**Expected Result:**
+
+* Validation messages displayed:
+
+  * Username: *Required*
+  * Password: *Required*
+
+---
+
+## 📊 Priority
+
+* High: All above cases (critical login coverage)

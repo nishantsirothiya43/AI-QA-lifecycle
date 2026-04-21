@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 2
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,7 +20,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 2
+          "actualWorkers": 1
         },
         "id": "",
         "name": "",
@@ -66,13 +66,13 @@
       "specs": [],
       "suites": [
         {
-          "title": "SauceDemo Login Tests",
+          "title": "Login Module",
           "file": "TC-001.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "✅ Valid login should succeed",
+              "title": "Login with Valid Credentials",
               "ok": true,
               "tags": [],
               "tests": [
@@ -87,207 +87,28 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1135,
+                      "duration": 5733,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-21T17:50:56.123Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "577687e59bef6f4b4ce3-ca29eff014626fbd432b",
-              "file": "TC-001.spec.ts",
-              "line": 9,
-              "column": 7
-            },
-            {
-              "title": "❌ Invalid password should show error",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 427,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-21T17:50:57.638Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "577687e59bef6f4b4ce3-e758b7f6181cf4d0330a",
-              "file": "TC-001.spec.ts",
-              "line": 18,
-              "column": 7
-            },
-            {
-              "title": "🚫 Locked user should not login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 403,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-21T17:50:58.080Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "577687e59bef6f4b4ce3-555d8544531057cca8cc",
-              "file": "TC-001.spec.ts",
-              "line": 28,
-              "column": 7
-            },
-            {
-              "title": "⚠️ Empty fields validation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 442,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-21T17:50:58.491Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "577687e59bef6f4b4ce3-b05e0124dc60e5b2d882",
-              "file": "TC-001.spec.ts",
-              "line": 38,
-              "column": 7
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "TC-002.spec.ts",
-      "file": "TC-002.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Dummy App Login Test",
-          "file": "TC-002.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should login successfully",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "timedOut",
-                      "duration": 30384,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "/work/tests/generated/TC-002.spec.ts",
-                            "column": 39,
-                            "line": 6
-                          },
-                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Username')\u001b[22m\n\n\n  4 |   test('should login successfully', async ({ page }) => {\n  5 |     await page.goto('https://expandtesting.com');\n> 6 |     await page.getByLabel('Username').fill('practice');\n    |                                       ^\n  7 |     await page.getByLabel('Password').fill('SuperSecretPassword!');\n  8 |     await page.getByRole('button', { name: 'Login' }).click();\n  9 |     await expect(page.getByText('You logged into a secure area!')).toBeVisible();\n    at /work/tests/generated/TC-002.spec.ts:6:39"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-21T17:50:56.124Z",
+                      "startTime": "2026-04-21T18:22:31.056Z",
                       "annotations": [],
                       "attachments": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/work/test-results/TC-002-Dummy-App-Login-Test-should-login-successfully/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/work/test-results/TC-002-Dummy-App-Login-Test-should-login-successfully/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/work/test-results/TC-002-Dummy-App-Login-Test-should-login-successfully/trace.zip"
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/work/test-results/TC-001-Login-Module-Login-with-Valid-Credentials/video.webm"
                         }
                       ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "bfc1d44aad53a9e876a9-021349c31c62acf10d63",
-              "file": "TC-002.spec.ts",
-              "line": 4,
+              "id": "577687e59bef6f4b4ce3-fc60487545bfa54ee81b",
+              "file": "TC-001.spec.ts",
+              "line": 5,
               "column": 7
             }
           ]
@@ -297,11 +118,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-21T17:50:55.454Z",
-    "duration": 31673.803000000004,
-    "expected": 4,
+    "startTime": "2026-04-21T18:22:30.619Z",
+    "duration": 6310.056,
+    "expected": 1,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

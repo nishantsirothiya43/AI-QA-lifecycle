@@ -60,6 +60,7 @@ type ProviderConfigPayload = {
 
 const app = express();
 const port = Number.parseInt(process.env.API_PORT ?? '8787', 10);
+const DEFAULT_TARGET_URL = 'https://demo.playwright.dev/todomvc/';
 
 const PATHS = {
   env: '.env',
@@ -123,15 +124,23 @@ async function loadFrontendInput(): Promise<FrontendInputState> {
   ]);
   const [acceptanceCriteria, targetUrl] = await Promise.all([
     criteriaExists ? readTextFile(PATHS.acceptanceCriteria) : Promise.resolve(''),
-    urlExists ? readTextFile(PATHS.targetUrl) : Promise.resolve('https://demo.playwright.dev/todomvc/'),
+    urlExists ? readTextFile(PATHS.targetUrl) : Promise.resolve(DEFAULT_TARGET_URL),
   ]);
   const criteriaStat = criteriaExists ? await fs.stat(PATHS.acceptanceCriteria) : null;
 
   return {
-    targetUrl: targetUrl.trim() || 'https://demo.playwright.dev/todomvc/',
+    targetUrl: targetUrl.trim() || DEFAULT_TARGET_URL,
     acceptanceCriteria,
     updatedAt: criteriaStat ? criteriaStat.mtime.toISOString() : null,
   };
+}
+
+async function loadTargetUrlOrDefault(): Promise<string> {
+  if (!(await fileExists(PATHS.targetUrl))) {
+    return DEFAULT_TARGET_URL;
+  }
+  const value = (await readTextFile(PATHS.targetUrl)).trim();
+  return value || DEFAULT_TARGET_URL;
 }
 
 async function loadGeneratedScripts(): Promise<ScriptFile[]> {
@@ -368,7 +377,8 @@ app.post('/api/generate-scripts', async (_req, res) => {
       const testCases = await readJSON<TestCase[]>(PATHS.testCases);
       await writeJSON(PATHS.reviewedCases, testCases);
     }
-    await generateScripts(PATHS.reviewedCases);
+    const targetUrl = await loadTargetUrlOrDefault();
+    await generateScripts(PATHS.reviewedCases, targetUrl);
     const specIds = await listGeneratedSpecTestIds();
     await writeScriptManifestForSpecs(specIds);
     res.json(await buildSnapshot());
@@ -403,7 +413,8 @@ app.post('/api/run-full-pipeline', async (_req, res) => {
     const criteria = await readTextFile(PATHS.acceptanceCriteria);
     const testCases = await generateTestCases(criteria);
     await writeJSON(PATHS.reviewedCases, testCases);
-    await generateScripts(PATHS.reviewedCases);
+    const targetUrl = await loadTargetUrlOrDefault();
+    await generateScripts(PATHS.reviewedCases, targetUrl);
     const specIds = await listGeneratedSpecTestIds();
     await writeScriptManifestForSpecs(specIds);
 

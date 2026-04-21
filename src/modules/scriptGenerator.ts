@@ -37,21 +37,15 @@ Rules:
 - Never use page.waitForTimeout() — use expect with timeout instead
 - Wrap everything in test.describe() block
 - For API tests use the request fixture
-- IMPORTANT: The application under test is a public demo hosted at https://demo.playwright.dev/todomvc/
-  Assume Playwright config sets baseURL to https://demo.playwright.dev and navigate with:
-  await page.goto('/todomvc/', { waitUntil: 'domcontentloaded' })
+- IMPORTANT: The app under test is provided per run as TARGET URL
+- Assume Playwright config sets baseURL to that TARGET URL
+- For UI tests, navigate with page.goto('/', { waitUntil: 'domcontentloaded' }) unless a specific route is required by the test steps
 - Add brief comments on key steps`;
 
-export const scriptUserPrompt = (testCase: TestCase): string => {
-  const stepsText = testCase.steps
-    .map(
-      (step) =>
-        `${step.stepNumber}. Action: ${step.action}\n   Expected: ${step.expectedResult}`
-    )
-    .join('\n');
-
+export const scriptUserPrompt = (testCase: TestCase, targetUrl: string): string => {
   return `Generate a complete Playwright TypeScript test for:
 
+Target URL: ${targetUrl}
 Title: ${testCase.title}
 Type: ${testCase.type}
 Description: ${testCase.description}
@@ -75,7 +69,7 @@ API Details:
 }`;
 };
 
-export async function generateScripts(filePath: string): Promise<ScriptFile[]> {
+export async function generateScripts(filePath: string, targetUrl: string): Promise<ScriptFile[]> {
   const reviewedCases = await readJSON<TestCase[]>(filePath);
   const approvedCases = reviewedCases.filter((testCase) => testCase.reviewStatus === 'approved');
 
@@ -87,7 +81,7 @@ export async function generateScripts(filePath: string): Promise<ScriptFile[]> {
     const outputPath = path.join(OUTPUT_DIR, `${testCase.id}.spec.ts`);
 
     try {
-      const rawResponse = await callAI(SCRIPT_SYSTEM_PROMPT, scriptUserPrompt(testCase), 4096);
+      const rawResponse = await callAI(SCRIPT_SYSTEM_PROMPT, scriptUserPrompt(testCase, targetUrl), 4096);
       const scriptContent = normalizeScriptResponse(rawResponse);
 
       if (!isLikelyPlaywrightScript(scriptContent)) {
