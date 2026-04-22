@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { TestCasePlainDetails } from '../components/TestCasePlainDetails';
 import { api } from '../api/client';
 import type { TestCase } from '../types';
 
@@ -21,6 +22,7 @@ export default function TestCases() {
   const [manualApiMethod, setManualApiMethod] = useState('GET');
   const [manualApiEndpoint, setManualApiEndpoint] = useState('');
   const [manualApiExpectedStatus, setManualApiExpectedStatus] = useState('200');
+  const [detailOpenById, setDetailOpenById] = useState<Record<string, boolean>>({});
 
   async function loadCases() {
     setLoading(true);
@@ -110,6 +112,10 @@ export default function TestCases() {
       return Math.max(max, Number(match[1]));
     }, 0);
     return `TC-${String(maxId + 1).padStart(3, '0')}`;
+  }
+
+  function toggleCaseDetails(id: string) {
+    setDetailOpenById((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   async function onAddManualFromText() {
@@ -354,18 +360,51 @@ export default function TestCases() {
         </div>
       )}
       <div style={{ display: 'grid', gap: 10 }}>
-        {cases.map((tc) => (
-          <div
-            key={tc.id}
-            style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: 'var(--bg-surface)' }}
-          >
-            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-amber)' }}>
-              {tc.id} · {tc.type} · {tc.priority} · {tc.source} · {tc.reviewStatus}
+        {cases.map((tc, index) => {
+          const rowKey =
+            typeof tc.id === 'string' && tc.id.trim().length > 0 ? tc.id.trim() : `row-${index}`;
+          const detailsOpen = Boolean(detailOpenById[rowKey]);
+          return (
+            <div
+              key={rowKey}
+              style={{ border: '1px solid var(--border)', borderRadius: 8, padding: 12, background: 'var(--bg-surface)' }}
+            >
+              <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-amber)' }}>
+                {rowKey} · {tc.type} · {tc.priority} · {tc.source} · {tc.reviewStatus} ·{' '}
+                {tc.automationStatus ?? 'automatable'}
+              </div>
+              <div style={{ marginTop: 4, fontWeight: 600 }}>
+                {typeof tc.title === 'string' && tc.title.trim() ? tc.title : 'Untitled test'}
+              </div>
+              <div style={{ color: 'var(--text-muted)', marginTop: 4 }}>
+                {typeof tc.description === 'string' && tc.description.trim()
+                  ? tc.description
+                  : 'No short summary on file.'}
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <button
+                  type="button"
+                  onClick={() => toggleCaseDetails(rowKey)}
+                  aria-expanded={detailsOpen}
+                  disabled={loading || importBusy}
+                >
+                  {detailsOpen ? 'Hide full test plan' : 'Open full test plan (plain language)'}
+                </button>
+              </div>
+              {detailsOpen && (
+                <div
+                  style={{
+                    marginTop: 12,
+                    paddingTop: 12,
+                    borderTop: '1px solid var(--border)',
+                  }}
+                >
+                  <TestCasePlainDetails tc={tc} />
+                </div>
+              )}
             </div>
-            <div style={{ marginTop: 4, fontWeight: 600 }}>{tc.title}</div>
-            <div style={{ color: 'var(--text-muted)', marginTop: 4 }}>{tc.description}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

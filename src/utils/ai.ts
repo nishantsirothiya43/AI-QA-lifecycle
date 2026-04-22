@@ -40,6 +40,20 @@ const PROVIDER_TIMEOUTS_MS = {
 } as const;
 const execFileAsync = promisify(execFile);
 
+function effectiveMaxTokens(provider: 'gemini' | 'ollama' | 'claude', requested: number): number {
+  const safeRequested = Number.isFinite(requested) ? Math.max(64, Math.floor(requested)) : 512;
+  if (provider !== 'claude') {
+    return safeRequested;
+  }
+
+  // Budget-friendly default for small Claude TPM plans.
+  // Can be overridden via env without code changes.
+  const envValue = Number.parseInt(process.env.CLAUDE_MAX_OUTPUT_TOKENS ?? '', 10);
+  const defaultCap = Number.isFinite(envValue) && envValue > 0 ? envValue : 700;
+  const cap = Math.max(128, Math.min(1200, defaultCap));
+  return Math.min(safeRequested, cap);
+}
+
 function isDnsErrorMessage(message: string): boolean {
   const lower = message.toLowerCase();
   return (
@@ -472,25 +486,26 @@ export async function callAI(
   refreshConfigFromEnv();
   assertProviderCredentials();
 
-  const invoke = async (): Promise<string> => {
+  const invoke = async (requestedTokens: number): Promise<string> => {
+    const tokens = effectiveMaxTokens(CONFIG.aiProvider, requestedTokens);
     if (CONFIG.aiProvider === 'claude' && isMockMode()) {
       return callClaudeMock(systemPrompt, userPrompt);
     }
 
     switch (CONFIG.aiProvider) {
       case 'gemini':
-        return callGemini(systemPrompt, userPrompt, maxTokens);
+        return callGemini(systemPrompt, userPrompt, tokens);
       case 'ollama':
-        return callOllama(systemPrompt, userPrompt, maxTokens);
+        return callOllama(systemPrompt, userPrompt, tokens);
       case 'claude':
-        return callClaudeAnthropic(systemPrompt, userPrompt, maxTokens);
+        return callClaudeAnthropic(systemPrompt, userPrompt, tokens);
       default:
         throw new Error(`Unsupported AI provider: ${String(CONFIG.aiProvider)}`);
     }
   };
 
   try {
-    return await invoke();
+    return await invoke(maxTokens);
   } catch (error: unknown) {
     const err = error as { status?: number; message?: string };
     const message = err instanceof Error ? err.message : String(error);
@@ -499,14 +514,42 @@ export async function callAI(
     const isRateLimit =
       err?.status === 429 ||
       message.includes('429') ||
+      lowerMessage.includes('rate limit') ||
+      lowerMessage.includes('would exceed') ||
+      lowerMessage.includes('tokens per minute') ||
       lowerMessage.includes('overloaded') ||
       lowerMessage.includes('high demand') ||
       lowerMessage.includes('temporarily unavailable');
 
     if (isRateLimit) {
-      console.warn('[AI] Provider under load. Retrying in 10 seconds...');
-      await new Promise((res) => setTimeout(res, 10_000));
-      return invoke();
+      // For Claude low-TPM plans, retrying with the same token budget usually fails again.
+      // Reduce max output progressively to stay under org TPM while preserving existing flow.
+      const first = effectiveMaxTokens(CONFIG.aiProvider, maxTokens);
+      const retryBudgets = [Math.max(192, Math.floor(first * 0.6)), Math.max(128, Math.floor(first * 0.35))];
+      for (const retryTokens of retryBudgets) {
+        console.warn(`[AI] Rate limit hit; retrying in 12s with max_tokens=${retryTokens}...`);
+        await new Promise((res) => setTimeout(res, 12_000));
+        try {
+          return await invoke(retryTokens);
+        } catch (retryError: unknown) {
+          const retryMessage = retryError instanceof Error ? retryError.message : String(retryError);
+          const retryLower = retryMessage.toLowerCase();
+          const stillRateLimited =
+            retryMessage.includes('429') ||
+            retryLower.includes('rate limit') ||
+            retryLower.includes('would exceed') ||
+            retryLower.includes('tokens per minute') ||
+            retryLower.includes('overloaded') ||
+            retryLower.includes('high demand') ||
+            retryLower.includes('temporarily unavailable');
+          if (!stillRateLimited) {
+            throw retryError instanceof Error ? retryError : new Error(retryMessage);
+          }
+        }
+      }
+      throw new Error(
+        'Provider rate limit exceeded repeatedly. Try again in a minute, reduce request size, or lower CLAUDE_MAX_OUTPUT_TOKENS in .env.'
+      );
     }
 
     if (error instanceof Error && error.name === 'AbortError') {
@@ -529,7 +572,7 @@ export async function callAI(
       console.warn('[AI][Gemini] DNS resolution failed. Retrying in 3 seconds...');
       await new Promise((res) => setTimeout(res, 3_000));
       try {
-        return await invoke();
+        return await invoke(maxTokens);
       } catch (retryError: unknown) {
         const secondMessage = retryError instanceof Error ? retryError.message : String(retryError);
         const secondLower = secondMessage.toLowerCase();
@@ -540,7 +583,7 @@ export async function callAI(
             // Fallback resolvers when local DNS intermittently fails for Node processes.
             dns.setServers(['8.8.8.8', '1.1.1.1']);
             console.warn('[AI][Gemini] Switched Node DNS servers to 8.8.8.8/1.1.1.1. Retrying...');
-            return await invoke();
+            return await invoke(maxTokens);
           } catch (dnsRetryError: unknown) {
             const retryMessage =
               dnsRetryError instanceof Error ? dnsRetryError.message : String(dnsRetryError);

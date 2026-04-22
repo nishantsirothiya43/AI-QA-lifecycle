@@ -1,15 +1,15 @@
 {
-  "runAt": "2026-04-21T18:22:22.997Z",
+  "runAt": "2026-04-22T10:04:05.076Z",
   "totalTests": 1,
   "passed": 1,
   "failed": 0,
   "skipped": 0,
   "results": [
     {
-      "testId": "TC-001.spec.ts:5",
-      "testTitle": "Login with Valid Credentials",
-      "status": "passed",
-      "duration": 5733
+      "testId": "TC-001.spec.ts:4",
+      "testTitle": "Verify successful login with valid username and password",
+      "status": "failed",
+      "duration": 5089
     }
   ]
 }

@@ -25,7 +25,8 @@ Each object must follow this EXACT schema:
   "expectedOutcome": "final expected state",
   "tags": ["login", "smoke"],
   "source": "generated",
-  "reviewStatus": "pending"
+  "reviewStatus": "pending",
+  "automationStatus": "automatable"
 }
 
 For API test cases ONLY, also include:
@@ -99,6 +100,7 @@ const TestCaseSchema = z
     apiDetails: ApiTestDetailsSchema.optional(),
     source: z.enum(['generated', 'manual']).default('generated'),
     reviewStatus: z.enum(['pending', 'approved', 'rejected', 'edited']).default('pending'),
+    automationStatus: z.enum(['automatable', 'not_automatable']).default('automatable'),
     reviewNotes: z.string().optional(),
   })
   .superRefine((value, ctx) => {
@@ -181,6 +183,7 @@ function normalizeTestCaseCandidate(item: unknown, index: number): unknown {
       : [],
     source: 'generated',
     reviewStatus: 'pending',
+    automationStatus: 'automatable',
   };
 
   if (normalized.type === 'API') {

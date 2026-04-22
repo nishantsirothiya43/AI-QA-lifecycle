@@ -2,9 +2,5 @@
   {
     "testId": "TC-001",
     "approved": true
-  },
-  {
-    "testId": "TC-002",
-    "approved": true
   }
 ]

@@ -66,13 +66,13 @@
       "specs": [],
       "suites": [
         {
-          "title": "Login Module",
+          "title": "Login with valid credentials",
           "file": "TC-001.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "Login with Valid Credentials",
+              "title": "Verify successful login with valid username and password",
               "ok": true,
               "tags": [],
               "tests": [
@@ -87,18 +87,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5733,
+                      "duration": 5089,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-21T18:22:31.056Z",
+                      "startTime": "2026-04-22T10:04:25.404Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "/work/test-results/TC-001-Login-Module-Login-with-Valid-Credentials/video.webm"
+                          "path": "/work/test-results/TC-001-Login-with-valid-cr-24a71-valid-username-and-password/video.webm"
                         }
                       ]
                     }
@@ -106,9 +106,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "577687e59bef6f4b4ce3-fc60487545bfa54ee81b",
+              "id": "577687e59bef6f4b4ce3-99e6db32121190fb63df",
               "file": "TC-001.spec.ts",
-              "line": 5,
+              "line": 4,
               "column": 7
             }
           ]
@@ -118,8 +118,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-21T18:22:30.619Z",
-    "duration": 6310.056,
+    "startTime": "2026-04-22T10:04:24.965Z",
+    "duration": 5872.610000000001,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

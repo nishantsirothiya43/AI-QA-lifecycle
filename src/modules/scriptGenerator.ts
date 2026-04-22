@@ -71,7 +71,12 @@ API Details:
 
 export async function generateScripts(filePath: string, targetUrl: string): Promise<ScriptFile[]> {
   const reviewedCases = await readJSON<TestCase[]>(filePath);
-  const approvedCases = reviewedCases.filter((testCase) => testCase.reviewStatus === 'approved');
+  const approvedCases = reviewedCases.filter(
+    (testCase) =>
+      testCase.source === 'generated' &&
+      testCase.reviewStatus === 'approved' &&
+      testCase.automationStatus !== 'not_automatable'
+  );
 
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 

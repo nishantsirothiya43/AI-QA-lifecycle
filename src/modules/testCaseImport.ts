@@ -30,6 +30,7 @@ const TestCaseSchema = z
     apiDetails: ApiTestDetailsSchema.optional(),
     source: z.enum(['generated', 'manual']),
     reviewStatus: z.enum(['pending', 'approved', 'rejected', 'edited']),
+    automationStatus: z.enum(['automatable', 'not_automatable']).default('automatable'),
     reviewNotes: z.string().optional(),
   })
   .superRefine((value, ctx) => {

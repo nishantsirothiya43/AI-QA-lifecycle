@@ -1,6 +1,7 @@
 export type TestType = 'UI' | 'API';
 export type Priority = 'High' | 'Medium' | 'Low';
 export type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'edited';
+export type AutomationStatus = 'automatable' | 'not_automatable';
 export type AIProvider = 'gemini' | 'ollama' | 'claude';
 
 export interface TestStep {
@@ -30,6 +31,7 @@ export interface TestCase {
   apiDetails?: ApiTestDetails;
   source: 'generated' | 'manual';
   reviewStatus: ReviewStatus;
+  automationStatus?: AutomationStatus;
   reviewNotes?: string;
 }
 
