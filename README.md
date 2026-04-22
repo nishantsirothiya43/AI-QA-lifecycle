@@ -261,3 +261,28 @@ Then run tests from frontend or API; backend will execute Playwright inside cont
 - This is a prototype focused on QA lifecycle workflow and robustness.
 - Local storage is used in frontend where appropriate; backend artifacts remain file-based.
 - Keep secrets only in `.env` (never commit real keys).
+
+## How this solution can scale
+
+- **Storage and state**: move from file-based artifacts to a database/object store (for versioned test cases, scripts, reports, and approvals) with project/workspace tenancy.
+- **Execution layer**: run Playwright in distributed workers/queues (e.g., job queue + container pool) to execute suites in parallel and isolate flaky environments.
+- **Model orchestration**: add provider routing policies (cost/latency/quality tiers), prompt/version tracking, and caching for repeat generation calls.
+- **Collaboration**: add role-based access, audit logs, reviewer assignment, and change history on test-case/script approvals.
+- **Observability**: add structured logs, metrics, tracing, and quality dashboards (pass rate trends, flakiness, regeneration frequency, and model error rates).
+
+## Where human validation is critical
+
+- **Test case review**: confirming generated scenarios match business intent and risk priorities (not just syntactic correctness).
+- **Automatability decision**: marking `automatable` vs `not_automatable`, especially for flows requiring CAPTCHAs, OTPs, third-party anti-bot controls, or unstable external dependencies.
+- **Script approval gate**: reviewing generated selectors/assertions before execution to avoid false confidence or unsafe actions.
+- **Failure triage**: validating AI failure categorization (script defect vs product defect vs environment issue) before filing defects or rerouting work.
+- **Release-signoff usage**: interpreting results in product context; automated outputs should inform decisions, not replace QA ownership.
+
+## Improvements with more time
+
+- **Pre-run script validation**: static compile/lint check plus auto-regeneration fallback when syntax/runtime-smell issues are detected.
+- **Flakiness controls**: retry strategy with heuristics, selector health checks, and quarantine workflow for unstable tests.
+- **Better data contracts**: stricter schema/versioning for all import/export payloads, migration support, and compatibility checks in UI/API.
+- **Advanced UX**: richer diff view for review changes, batch actions, saved filters, and artifact deep links (video/trace/error context per test row).
+- **CI integration**: GitHub Actions pipeline templates, PR comments with summarized QA output, and publishable artifacts for reviewer workflows.
+
