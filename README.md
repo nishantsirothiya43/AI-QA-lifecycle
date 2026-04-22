@@ -7,6 +7,51 @@ AI-powered QA lifecycle prototype that can run from:
 
 The system generates test cases from acceptance criteria, supports review, generates Playwright scripts, runs tests, and analyzes failures.
 
+## Reviewer quick start (after clone)
+
+1. Clone and install:
+
+```bash
+git clone <your-repo-url>
+cd AI-QA-lifecycle
+npm install
+cd frontend && npm install && cd ..
+cp .env.example .env
+```
+
+2. Configure `.env` (minimum):
+   - pick one provider with credentials (`AI_PROVIDER=gemini|ollama|claude`)
+   - set execution mode:
+     - local: `PLAYWRIGHT_EXECUTION_MODE=local`
+     - docker: `PLAYWRIGHT_EXECUTION_MODE=docker`
+
+3. Start backend API:
+
+```bash
+npm run api
+```
+
+4. In a second terminal, start frontend:
+
+```bash
+cd frontend
+npm run dev
+```
+
+5. Open [http://localhost:5173](http://localhost:5173) and run:
+   - Dashboard → Save Context
+   - Test Cases → Generate
+   - Review → Approve/Reject and set automatable/not-automatable
+   - Scripts → Generate Scripts, then approve scripts
+   - Execution → Run tests
+   - Failures → Analyze failures
+
+6. If anything looks stale:
+
+```bash
+npm run api:restart
+```
+
 ## What is implemented
 
 - Test case generation (UI + API scenarios) from acceptance criteria
