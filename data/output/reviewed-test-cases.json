@@ -1,23 +1,108 @@
 [
   {
     "id": "TC-001",
-    "title": "Successful login with valid credentials (UI)",
+    "title": "Successful login with valid credentials",
     "type": "UI",
     "priority": "High",
-    "description": "Verifies that a user can successfully log in with valid credentials and is redirected to the post-login experience.",
+    "description": "Verify that a user can successfully log in with valid username and password and is redirected to the dashboard",
     "preconditions": [
-      "User is on the login page."
+      "Browser is open and navigated to https://opensource-demo.orangehrmlive.com/",
+      "Login page is fully loaded",
+      "User account with username 'Admin' and password 'admin123' exists and is active"
     ],
     "steps": [
       {
         "stepNumber": 1,
-        "action": "Review feature flow",
-        "expectedResult": "System behavior matches acceptance criteria"
+        "action": "Navigate to https://opensource-demo.orangehrmlive.com/",
+        "expectedResult": "Login page is displayed with username and password fields visible"
+      },
+      {
+        "stepNumber": 2,
+        "action": "Enter 'Admin' in the username field",
+        "expectedResult": "Username field displays 'Admin'"
+      },
+      {
+        "stepNumber": 3,
+        "action": "Enter 'admin123' in the password field",
+        "expectedResult": "Password field displays masked characters"
+      },
+      {
+        "stepNumber": 4,
+        "action": "Click the Login button",
+        "expectedResult": "User is redirected to the OrangeHRM dashboard"
+      },
+      {
+        "stepNumber": 5,
+        "action": "Observe the dashboard page",
+        "expectedResult": "Dashboard is fully visible with navigation menu and welcome message for Admin user"
+      }
+    ],
+    "expectedOutcome": "User is successfully authenticated and dashboard is displayed with all expected UI elements",
+    "tags": [
+      "login",
+      "smoke",
+      "happy-path",
+      "authentication"
+    ],
+    "source": "generated",
+    "reviewStatus": "approved",
+    "automationStatus": "automatable"
+  },
+  {
+    "id": "TC-0019",
+    "title": "dummy",
+    "type": "UI",
+    "priority": "High",
+    "description": "dummy des",
+    "preconditions": [
+      "pre dummy"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "1. step 1",
+        "expectedResult": ""
+      },
+      {
+        "stepNumber": 2,
+        "action": "2. step 2",
+        "expectedResult": ""
+      }
+    ],
+    "expectedOutcome": "expected dummy",
+    "tags": [
+      "dummy"
+    ],
+    "source": "manual",
+    "reviewStatus": "approved",
+    "automationStatus": "not_automatable"
+  },
+  {
+    "id": "TC-002",
+    "title": "Login fails with invalid password",
+    "type": "UI",
+    "priority": "High",
+    "description": "Verify that login attempt with a valid username but incorrect password shows an error message and user remains on login page",
+    "preconditions": [
+      "Browser is open and navigated to https://opensource-demo.orangehrmlive.com/",
+      "Login page is fully loaded"
+    ],
+    "steps": [
+      {
+        "stepNumber": 1,
+        "action": "Navigate to https://opensource-demo.orangehrmlive.com/",
+        "expectedResult": "Login page is displayed"
+      },
+      {
+        "stepNumber": 2,
+        "action": "Enter 'Admin' in the username field",
+        "expectedResult": "Username field displays 'Admin'"
       }
     ],
     "expectedOutcome": "Feature behaves as expected.",
     "tags": [],
     "source": "generated",
-    "reviewStatus": "approved"
+    "reviewStatus": "approved",
+    "automationStatus": "not_automatable"
   }
 ]

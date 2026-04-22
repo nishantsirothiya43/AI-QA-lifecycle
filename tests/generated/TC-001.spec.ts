@@ -1,35 +1,36 @@
 import { test, expect } from '@playwright/test';
 
-// Group tests related to the simulated authentication or initial app interaction
-test.describe('Initial application interaction (simulated "login" success)', () => {
+test.describe('Login with valid credentials', () => {
+  test('Verify successful login with valid username and password', async ({ page }) => {
+    // Navigate to the OrangeHRM login page
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login', { waitUntil: 'domcontentloaded' });
 
-  // Test case for successfully adding a todo item, acting as a "post-login" success indicator
-  test('Successful interaction by adding a todo item', async ({ page }) => {
-    // 1. Precondition: User is on the login page (TodoMVC homepage in this case)
-    // Navigate to the TodoMVC application
-    await page.goto('/todomvc/', { waitUntil: 'domcontentloaded' });
+    // Step 1: Enter 'Admin' in the username field
+    const usernameField = page.getByPlaceholder('Username');
+    await expect(usernameField).toBeVisible();
+    await usernameField.fill('Admin');
 
-    // Define the new todo item text
-    const todoText = 'Learn Playwright automation';
+    // Verify username field displays 'Admin'
+    await expect(usernameField).toHaveValue('Admin');
 
-    // 2. Locate the input field for new todos by its placeholder text
-    const newTodoInput = page.getByPlaceholder('What needs to be done?');
-    // Expect the input field to be visible before interacting
-    await expect(newTodoInput).toBeVisible();
+    // Step 2: Enter 'admin123' in the password field
+    const passwordField = page.getByPlaceholder('Password');
+    await expect(passwordField).toBeVisible();
+    await passwordField.fill('admin123');
 
-    // 3. Enter the todo text into the input field
-    await newTodoInput.fill(todoText);
+    // Verify password field displays 'admin123'
+    await expect(passwordField).toHaveValue('admin123');
 
-    // 4. Press Enter to submit the new todo item
-    await newTodoInput.press('Enter');
+    // Step 3: Click the 'Login' button
+    const loginButton = page.getByRole('button', { name: 'Login' });
+    await expect(loginButton).toBeVisible();
+    await loginButton.click();
 
-    // 5. Final Expected Outcome: Verify the new todo item is visible in the list
-    // This acts as the "post-login experience" indicating successful interaction
-    const todoItem = page.getByText(todoText);
-    await expect(todoItem).toBeVisible();
+    // Verify user is redirected to the dashboard
+    await expect(page).toHaveURL(/.*dashboard/, { timeout: 15000 });
 
-    // Optionally, verify the count of active items if needed (e.g., 1 active item)
-    const activeItemsCount = page.locator('.todo-count strong');
-    await expect(activeItemsCount).toHaveText('1');
+    // Verify dashboard heading or key element is visible
+    const dashboardHeading = page.getByRole('heading', { name: 'Dashboard' });
+    await expect(dashboardHeading).toBeVisible({ timeout: 15000 });
   });
 });

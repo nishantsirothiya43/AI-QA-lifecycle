@@ -66,13 +66,13 @@
       "specs": [],
       "suites": [
         {
-          "title": "Initial application interaction (simulated \"login\" success)",
+          "title": "Login with valid credentials",
           "file": "TC-001.spec.ts",
-          "line": 4,
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "Successful interaction by adding a todo item",
+              "title": "Verify successful login with valid username and password",
               "ok": true,
               "tags": [],
               "tests": [
@@ -87,22 +87,28 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 398,
+                      "duration": 5089,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-21T12:12:32.438Z",
+                      "startTime": "2026-04-22T10:04:25.404Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/work/test-results/TC-001-Login-with-valid-cr-24a71-valid-username-and-password/video.webm"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
                 }
               ],
-              "id": "577687e59bef6f4b4ce3-4e175de429e3142f1229",
+              "id": "577687e59bef6f4b4ce3-99e6db32121190fb63df",
               "file": "TC-001.spec.ts",
-              "line": 7,
+              "line": 4,
               "column": 7
             }
           ]
@@ -112,8 +118,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-21T12:12:31.997Z",
-    "duration": 968.9969999999994,
+    "startTime": "2026-04-22T10:04:24.965Z",
+    "duration": 5872.610000000001,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

@@ -19,9 +19,15 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <div style={{ display: 'flex', height: '100%' }}>
+    <div style={{ display: 'flex', height: '100%', background: 'radial-gradient(circle at 20% 0%, #141a2d 0%, var(--bg-base) 35%)' }}>
       <Sidebar status={status} />
-      <main style={{ flex: 1, padding: 20, overflow: 'auto' }}>
+      <main
+        style={{
+          flex: 1,
+          padding: 22,
+          overflow: 'auto',
+        }}
+      >
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard status={status} />} />

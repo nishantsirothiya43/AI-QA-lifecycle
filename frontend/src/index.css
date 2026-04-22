@@ -12,6 +12,7 @@
   --bg-base: #0d0f12;
   --bg-surface: #141720;
   --bg-raised: #1c2030;
+  --bg-hover: #20263a;
   --border: #252a3a;
   --border-bright: #353d58;
   --text-primary: #e8eaf0;
@@ -37,4 +38,97 @@ body,
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: hidden;
+}
+
+a {
+  color: var(--accent-blue);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--border-bright);
+  background: linear-gradient(180deg, #1f2740 0%, #1a2238 100%);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent-blue);
+  background: linear-gradient(180deg, #243054 0%, #1f2a49 100%);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #111622;
+  color: var(--text-primary);
+  padding: 9px 10px;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-faint);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+pre {
+  overflow: auto;
+}
+
+/* Shared page entrance animation used by all route views. */
+.fade-up {
+  animation: fadeUp 220ms ease-out both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

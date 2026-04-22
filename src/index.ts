@@ -8,6 +8,8 @@ import { fileExists, readTextFile, writeTextFile } from './utils/fileHelpers';
 import { getProviderInfo } from './utils/ai';
 
 const ACCEPTANCE_CRITERIA_PATH = `${CONFIG.paths.inputDir}/acceptance-criteria.md`;
+const TARGET_URL_PATH = `${CONFIG.paths.inputDir}/target-url.txt`;
+const DEFAULT_TARGET_URL = 'https://demo.playwright.dev/todomvc/';
 
 const DEFAULT_ACCEPTANCE_CRITERIA = `# Feature: User Login
 
@@ -26,6 +28,18 @@ async function loadAcceptanceCriteria(): Promise<string> {
   await writeTextFile(ACCEPTANCE_CRITERIA_PATH, `${DEFAULT_ACCEPTANCE_CRITERIA}\n`);
   console.warn(`No acceptance criteria file found. Created a starter file at ${ACCEPTANCE_CRITERIA_PATH}`);
   return `${DEFAULT_ACCEPTANCE_CRITERIA}\n`;
+}
+
+async function loadTargetUrl(): Promise<string> {
+  if (await fileExists(TARGET_URL_PATH)) {
+    const value = (await readTextFile(TARGET_URL_PATH)).trim();
+    if (value) {
+      return value;
+    }
+  }
+
+  await writeTextFile(TARGET_URL_PATH, `${DEFAULT_TARGET_URL}\n`);
+  return DEFAULT_TARGET_URL;
 }
 
 async function main(): Promise<void> {
@@ -49,7 +63,8 @@ async function main(): Promise<void> {
     console.log('Saved to: data/output/reviewed-test-cases.json');
 
     console.log('\nGenerating Playwright scripts from approved cases...');
-    const scripts = await generateScripts('data/output/reviewed-test-cases.json');
+    const targetUrl = await loadTargetUrl();
+    const scripts = await generateScripts('data/output/reviewed-test-cases.json', targetUrl);
     console.log(`Script generation complete. Generated ${scripts.length} scripts.`);
     console.log('Saved to: tests/generated/');
 
